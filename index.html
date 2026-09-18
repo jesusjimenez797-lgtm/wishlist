@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pizarra de Wishlists - Amor y Amistad</title>
+  <style>
+    :root {
+      --primary: #e63946;
+      --primary-hover: #c52a36;
+      --bg: #fff0f3;
+      --card-bg: #ffffff;
+      --text: #2b2d42;
+      --accent: #ffb703;
+      --border: #ffccd5;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      padding: 20px;
+      display: flex;
+      justify-content: center;
+      min-height: 100vh;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 900px;
+      display: flex;
+      flex-direction: column;
+      gap: 30px;
+    }
+
+    header {
+      text-align: center;
+      background: var(--card-bg);
+      padding: 25px;
+      border-radius: 16px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    }
+
+    header h1 {
+      color: var(--primary);
+      font-size: 28px;
+      margin-bottom: 8px;
+    }
+
+    header p {
+      color: #666;
+      font-size: 15px;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 25px;
+    }
+
+    @media (min-width: 768px) {
+      .layout {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    .panel {
+      background: var(--card-bg);
+      padding: 25px;
+      border-radius: 16px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .panel h2 {
+      font-size: 20px;
+      color: var(--primary);
+      border-bottom: 2px solid var(--border);
+      padding-bottom: 8px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    label {
+      font-size: 14px;
+      font-weight: 600;
+      color: #444;
+    }
+
+    input[type="text"], textarea {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      font-size: 14px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    input[type="text"]:focus, textarea:focus {
+      border-color: var(--primary);
+    }
+
+    .checkbox-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .checkbox-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      cursor: pointer;
+    }
+
+    .links-box {
+      background-color: #f8f9fa;
+      border: 2px dashed #d6e2e9;
+      padding: 12px;
+      border-radius: 8px;
+    }
+
+    .btn-submit {
+      background-color: var(--primary);
+      color: white;
+      border: none;
+      padding: 12px;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .btn-submit:hover {
+      background-color: var(--primary-hover);
+    }
+
+    /* Pizarra pública */
+    .wall-search {
+      margin-bottom: 15px;
+    }
+
+    .cards-container {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      max-height: 600px;
+      overflow-y: auto;
+      padding-right: 5px;
+    }
+
+    .wish-card {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-left: 5px solid var(--primary);
+      border-radius: 10px;
+      padding: 15px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+    }
+
+    .wish-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .wish-card-name {
+      font-weight: bold;
+      font-size: 16px;
+      color: var(--primary);
+    }
+
+    .wish-card-date {
+      font-size: 11px;
+      color: #aaa;
+    }
+
+    .tag-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+    }
+
+    .tag {
+      background: #ffe5ec;
+      color: var(--primary);
+      font-size: 11px;
+      padding: 3px 8px;
+      border-radius: 12px;
+      font-weight: 600;
+    }
+
+    .detail-item {
+      font-size: 13px;
+      color: #555;
+    }
+
+    .detail-item strong {
+      color: #333;
+    }
+
+    .links-list {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      margin-top: 5px;
+    }
+
+    .link-anchor {
+      font-size: 12px;
+      color: #0077b6;
+      word-break: break-all;
+      text-decoration: none;
+    }
+
+    .link-anchor:hover {
+      text-decoration: underline;
+    }
+
+    .empty-state {
+      text-align: center;
+      color: #888;
+      font-size: 14px;
+      padding: 30px 0;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <header>
+    <h1>💖 Pizarra Pública de Deseos 💖</h1>
+    <p>Publica tu wishlist para Amor y Amistad o busca la de tus amigos.</p>
+  </header>
+
+  <div class="layout">
+    <!-- Formulario para agregar wishlist -->
+    <div class="panel">
+      <h2>✍️ Publicar mi Lista</h2>
+      
+      <div class="form-group">
+        <label for="nombre">Tu Nombre o Apodo *</label>
+        <input type="text" id="nombre" placeholder="Ej: Camilo" required>
+      </div>
+
+      <div class="form-group">
+        <label>Categorías de interés:</label>
+        <div class="checkbox-grid">
+          <label class="checkbox-item"><input type="checkbox" name="categoria" value="Moda & Ropa"> 👗 Moda & Ropa</label>
+          <label class="checkbox-item"><input type="checkbox" name="categoria" value="Tecnología"> 🎧 Tecnología</label>
+          <label class="checkbox-item"><input type="checkbox" name="categoria" value="Perfumes"> 🧴 Perfumes</label>
+          <label class="checkbox-item"><input type="checkbox" name="categoria" value="Libros / Juegos"> 📚 Libros / Juegos</label>
+          <label class="checkbox-item"><input type="checkbox" name="categoria" value="Accesorios"> ⌚ Accesorios</label>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="tallas">Tallas (Calzado, Camisetas, etc.):</label>
+        <input type="text" id="tallas" placeholder="Ej: Camiseta M, Tenis 41">
+      </div>
+
+      <div class="form-group">
+        <label for="deseos">Detalles o cosas específicas que te gustan:</label>
+        <textarea id="deseos" rows="3" placeholder="Ej: Me gustan las camisetas holgadas, perfumes dulces o audífonos negros..."></textarea>
+      </div>
+
+      <!-- Campo Exclusivo para Enlaces -->
+      <div class="form-group links-box">
+        <label for="links">🔗 Links directos (Telegram, Instagram, tiendas...):</label>
+        <textarea id="links" rows="2" placeholder="Pega aquí los enlaces directos (uno por línea)..."></textarea>
+      </div>
+
+      <button class="btn-submit" onclick="guardarDeseo()">📌 Publicar en la Pizarra</button>
+    </div>
+
+    <!-- Pizarra Pública donde se muestran los resultados -->
+    <div class="panel">
+      <h2>📋 Wishlists Guardadas</h2>
+      
+      <div class="wall-search">
+        <input type="text" id="buscar" placeholder="🔍 Buscar por nombre..." oninput="filtrarTarjetas()">
+      </div>
+
+      <div class="cards-container" id="cardsContainer">
+        <div class="empty-state">Cargando listas...</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  let listaWishlists = [];
+
+  // Al cargar la página, recuperamos las listas guardadas en LocalStorage
+  window.onload = function() {
+    cargarWishlists();
+  };
+
+  function guardarDeseo() {
+    const nombre = document.getElementById('nombre').value.trim();
+    const tallas = document.getElementById('tallas').value.trim();
+    const deseos = document.getElementById('deseos').value.trim();
+    const links = document.getElementById('links').value.trim();
+
+    const categorias = Array.from(document.querySelectorAll('input[name="categoria"]:checked'))
+                             .map(c => c.value);
+
+    if (!nombre) {
+      alert("Por favor coloca tu nombre antes de publicar.");
+      return;
+    }
+
+    const nuevaWishlist = {
+      id: Date.now(),
+      nombre: nombre,
+      categorias: categorias,
+      tallas: tallas,
+      deseos: deseos,
+      links: links,
+      fecha: new Date().toLocaleDateString()
+    };
+
+    // Guardar en la lista local y en memoria del navegador
+    listaWishlists.unshift(nuevaWishlist);
+    localStorage.setItem('wishlists_amor_amistad', JSON.stringify(listaWishlists));
+
+    // Limpiar formulario
+    document.getElementById('nombre').value = '';
+    document.getElementById('tallas').value = '';
+    document.getElementById('deseos').value = '';
+    document.getElementById('links').value = '';
+    document.querySelectorAll('input[name="categoria"]').forEach(c => c.checked = false);
+
+    renderizarTarjetas(listaWishlists);
+    alert("¡Tu lista de deseos ha sido publicada en la pizarra!");
+  }
+
+  function cargarWishlists() {
+    const datosGuardados = localStorage.getItem('wishlists_amor_amistad');
+    if (datosGuardados) {
+      listaWishlists = JSON.parse(datosGuardados);
+    } else {
+      // Datos de ejemplo iniciales
+      listaWishlists = [
+        {
+          id: 1,
+          nombre: "Sofía",
+          categorias: ["Moda & Ropa", "Perfumes"],
+          tallas: "Camiseta S, Calzado 37",
+          deseos: "Prefiero tonos neutros o pasteles.",
+          links: "https://instagram.com/ejemplo-tienda\nhttps://t.me/ejemplo-canal",
+          fecha: "18/09/2026"
+        }
+      ];
+    }
+    renderizarTarjetas(listaWishlists);
+  }
+
+  function renderizarTarjetas(lista) {
+    const container = document.getElementById('cardsContainer');
+    container.innerHTML = '';
+
+    if (lista.length === 0) {
+      container.innerHTML = '<div class="empty-state">No se encontraron listas de deseos.</div>';
+      return;
+    }
+
+    lista.forEach(item => {
+      const card = document.createElement('div');
+      card.className = 'wish-card';
+
+      let tagsHTML = item.categorias.map(cat => `<span class="tag">${cat}</span>`).join('');
+      
+      let linksHTML = '';
+      if (item.links) {
+        const lineas = item.links.split('\n');
+        const enlaces = lineas.map(link => {
+          let url = link.trim();
+          if (url && !url.startsWith('http')) url = 'https://' + url;
+          return url ? `<a class="link-anchor" href="${url}" target="_blank">🔗 ${url}</a>` : '';
+        }).join('');
+
+        if (enlaces) {
+          linksHTML = `
+            <div class="detail-item" style="margin-top: 6px;">
+              <strong>Enlaces sugeridos:</strong>
+              <div class="links-list">${enlaces}</div>
+            </div>
+          `;
+        }
+      }
+
+      card.innerHTML = `
+        <div class="wish-card-header">
+          <span class="wish-card-name">${item.nombre}</span>
+          <span class="wish-card-date">${item.fecha}</span>
+        </div>
+        ${tagsHTML ? `<div class="tag-container">${tagsHTML}</div>` : ''}
+        ${item.tallas ? `<div class="detail-item"><strong>Tallas:</strong> ${item.tallas}</div>` : ''}
+        ${item.deseos ? `<div class="detail-item"><strong>Detalles / Deseos:</strong> ${item.deseos}</div>` : ''}
+        ${linksHTML}
+      `;
+
+      container.appendChild(card);
+    });
+  }
+
+  function filtrarTarjetas() {
+    const textoBusqueda = document.getElementById('buscar').value.toLowerCase();
+    const filtradas = listaWishlists.filter(item => 
+      item.nombre.toLowerCase().includes(textoBusqueda) ||
+      item.deseos.toLowerCase().includes(textoBusqueda)
+    );
+    renderizarTarjetas(filtradas);
+  }
+</script>
+
+</body>
+</html>
