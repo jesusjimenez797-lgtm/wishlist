@@ -11,7 +11,6 @@
       --bg: #fff0f3;
       --card-bg: #ffffff;
       --text: #2b2d42;
-      --accent: #ffb703;
       --border: #ffccd5;
     }
 
@@ -99,7 +98,7 @@
       color: #444;
     }
 
-    input[type="text"], textarea {
+    input[type="text"], input[type="password"], textarea {
       width: 100%;
       padding: 10px 12px;
       border: 1.5px solid var(--border);
@@ -109,7 +108,7 @@
       transition: border-color 0.2s;
     }
 
-    input[type="text"]:focus, textarea:focus {
+    input:focus, textarea:focus {
       border-color: var(--primary);
     }
 
@@ -150,6 +149,17 @@
       background-color: var(--primary-hover);
     }
 
+    .btn-cancel {
+      background-color: #6c757d;
+      color: white;
+      border: none;
+      padding: 8px;
+      border-radius: 8px;
+      font-size: 14px;
+      cursor: pointer;
+      margin-top: -8px;
+    }
+
     /* Pizarra pública */
     .wall-search {
       margin-bottom: 15px;
@@ -174,6 +184,7 @@
       flex-direction: column;
       gap: 10px;
       box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+      position: relative;
     }
 
     .wish-card-header {
@@ -235,6 +246,38 @@
       text-decoration: underline;
     }
 
+    /* Botones de acción en tarjetas */
+    .card-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 8px;
+      border-top: 1px dashed #eee;
+      padding-top: 8px;
+      justify-content: flex-end;
+    }
+
+    .btn-action {
+      background: none;
+      border: 1px solid #ddd;
+      padding: 4px 8px;
+      border-radius: 6px;
+      font-size: 12px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-action.edit:hover {
+      background-color: #e2eafc;
+      border-color: #0077b6;
+      color: #0077b6;
+    }
+
+    .btn-action.delete:hover {
+      background-color: #ffe5ec;
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+
     .empty-state {
       text-align: center;
       color: #888;
@@ -252,10 +295,12 @@
   </header>
 
   <div class="layout">
-    <!-- Formulario para agregar wishlist -->
+    <!-- Formulario -->
     <div class="panel">
-      <h2>✍️ Publicar mi Lista</h2>
+      <h2 id="formTitle">✍️ Publicar mi Lista</h2>
       
+      <input type="hidden" id="editId" value="">
+
       <div class="form-group">
         <label for="nombre">Tu Nombre o Apodo *</label>
         <input type="text" id="nombre" placeholder="Ej: Camilo" required>
@@ -288,10 +333,17 @@
         <textarea id="links" rows="2" placeholder="Pega aquí los enlaces directos (uno por línea)..."></textarea>
       </div>
 
-      <button class="btn-submit" onclick="guardarDeseo()">📌 Publicar en la Pizarra</button>
+      <!-- PIN para poder editar/borrar luego -->
+      <div class="form-group">
+        <label for="pin">🔒 Crea un PIN de 4 dígitos (para editar o borrar después) *</label>
+        <input type="password" id="pin" maxlength="4" placeholder="Ej: 1234" required>
+      </div>
+
+      <button class="btn-submit" id="btnSubmit" onclick="guardarDeseo()">📌 Publicar en la Pizarra</button>
+      <button class="btn-cancel" id="btnCancel" style="display:none;" onclick="cancelarEdicion()">Cancelar Edición</button>
     </div>
 
-    <!-- Pizarra Pública donde se muestran los resultados -->
+    <!-- Pizarra Pública -->
     <div class="panel">
       <h2>📋 Wishlists Guardadas</h2>
       
@@ -309,48 +361,62 @@
 <script>
   let listaWishlists = [];
 
-  // Al cargar la página, recuperamos las listas guardadas en LocalStorage
   window.onload = function() {
     cargarWishlists();
   };
 
   function guardarDeseo() {
+    const editId = document.getElementById('editId').value;
     const nombre = document.getElementById('nombre').value.trim();
     const tallas = document.getElementById('tallas').value.trim();
     const deseos = document.getElementById('deseos').value.trim();
     const links = document.getElementById('links').value.trim();
+    const pin = document.getElementById('pin').value.trim();
 
     const categorias = Array.from(document.querySelectorAll('input[name="categoria"]:checked'))
                              .map(c => c.value);
 
     if (!nombre) {
-      alert("Por favor coloca tu nombre antes de publicar.");
+      alert("Por favor coloca tu nombre.");
       return;
     }
 
-    const nuevaWishlist = {
-      id: Date.now(),
-      nombre: nombre,
-      categorias: categorias,
-      tallas: tallas,
-      deseos: deseos,
-      links: links,
-      fecha: new Date().toLocaleDateString()
-    };
+    if (!pin || pin.length < 4) {
+      alert("Por favor escribe un PIN de 4 dígitos para proteger tu publicación.");
+      return;
+    }
 
-    // Guardar en la lista local y en memoria del navegador
-    listaWishlists.unshift(nuevaWishlist);
+    if (editId) {
+      // Modo Edición
+      const index = listaWishlists.findIndex(item => item.id == editId);
+      if (index !== -1) {
+        listaWishlists[index].nombre = nombre;
+        listaWishlists[index].categorias = categorias;
+        listaWishlists[index].tallas = tallas;
+        listaWishlists[index].deseos = deseos;
+        listaWishlists[index].links = links;
+        listaWishlists[index].pin = pin; // Actualiza el PIN si lo cambió
+      }
+      alert("¡Tu wishlist ha sido actualizada exitosamente!");
+    } else {
+      // Modo Nueva Publicación
+      const nuevaWishlist = {
+        id: Date.now(),
+        nombre: nombre,
+        categorias: categorias,
+        tallas: tallas,
+        deseos: deseos,
+        links: links,
+        pin: pin,
+        fecha: new Date().toLocaleDateString()
+      };
+      listaWishlists.unshift(nuevaWishlist);
+      alert("¡Tu lista de deseos ha sido publicada en la pizarra!");
+    }
+
     localStorage.setItem('wishlists_amor_amistad', JSON.stringify(listaWishlists));
-
-    // Limpiar formulario
-    document.getElementById('nombre').value = '';
-    document.getElementById('tallas').value = '';
-    document.getElementById('deseos').value = '';
-    document.getElementById('links').value = '';
-    document.querySelectorAll('input[name="categoria"]').forEach(c => c.checked = false);
-
+    limpiarFormulario();
     renderizarTarjetas(listaWishlists);
-    alert("¡Tu lista de deseos ha sido publicada en la pizarra!");
   }
 
   function cargarWishlists() {
@@ -358,7 +424,6 @@
     if (datosGuardados) {
       listaWishlists = JSON.parse(datosGuardados);
     } else {
-      // Datos de ejemplo iniciales
       listaWishlists = [
         {
           id: 1,
@@ -366,7 +431,8 @@
           categorias: ["Moda & Ropa", "Perfumes"],
           tallas: "Camiseta S, Calzado 37",
           deseos: "Prefiero tonos neutros o pasteles.",
-          links: "https://instagram.com/ejemplo-tienda\nhttps://t.me/ejemplo-canal",
+          links: "https://instagram.com/ejemplo-tienda",
+          pin: "1234",
           fecha: "18/09/2026"
         }
       ];
@@ -387,7 +453,7 @@
       const card = document.createElement('div');
       card.className = 'wish-card';
 
-      let tagsHTML = item.categorias.map(cat => `<span class="tag">${cat}</span>`).join('');
+      let tagsHTML = item.categorias ? item.categorias.map(cat => `<span class="tag">${cat}</span>`).join('') : '';
       
       let linksHTML = '';
       if (item.links) {
@@ -417,17 +483,90 @@
         ${item.tallas ? `<div class="detail-item"><strong>Tallas:</strong> ${item.tallas}</div>` : ''}
         ${item.deseos ? `<div class="detail-item"><strong>Detalles / Deseos:</strong> ${item.deseos}</div>` : ''}
         ${linksHTML}
+
+        <div class="card-actions">
+          <button class="btn-action edit" onclick="solicitarEditar(${item.id})">✏️ Editar</button>
+          <button class="btn-action delete" onclick="solicitarEliminar(${item.id})">🗑️ Eliminar</button>
+        </div>
       `;
 
       container.appendChild(card);
     });
   }
 
+  function solicitarEditar(id) {
+    const item = listaWishlists.find(i => i.id == id);
+    if (!item) return;
+
+    const pinIngresado = prompt(`Ingresa tu PIN de 4 dígitos para editar la lista de ${item.nombre}:`);
+    if (pinIngresado === null) return; // Canceló
+
+    if (pinIngresado === item.pin) {
+      // Cargar datos en el formulario
+      document.getElementById('editId').value = item.id;
+      document.getElementById('nombre').value = item.nombre;
+      document.getElementById('tallas').value = item.tallas || '';
+      document.getElementById('deseos').value = item.deseos || '';
+      document.getElementById('links').value = item.links || '';
+      document.getElementById('pin').value = item.pin || '';
+
+      document.querySelectorAll('input[name="categoria"]').forEach(c => {
+        c.checked = item.categorias ? item.categorias.includes(c.value) : false;
+      });
+
+      // Cambiar interfaz a Modo Edición
+      document.getElementById('formTitle').innerText = "✏️ Editar mi Lista";
+      document.getElementById('btnSubmit').innerText = "💾 Guardar Cambios";
+      document.getElementById('btnCancel').style.display = "block";
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else {
+      alert("❌ PIN incorrecto. No puedes editar esta lista.");
+    }
+  }
+
+  function solicitarEliminar(id) {
+    const item = listaWishlists.find(i => i.id == id);
+    if (!item) return;
+
+    const pinIngresado = prompt(`Ingresa tu PIN de 4 dígitos para ELIMINAR la lista de ${item.nombre}:`);
+    if (pinIngresado === null) return; // Canceló
+
+    if (pinIngresado === item.pin) {
+      if (confirm(`¿Estás seguro de que quieres eliminar la lista de ${item.nombre}?`)) {
+        listaWishlists = listaWishlists.filter(i => i.id != id);
+        localStorage.setItem('wishlists_amor_amistad', JSON.stringify(listaWishlists));
+        renderizarTarjetas(listaWishlists);
+        alert("🗑️ Lista eliminada correctamente.");
+      }
+    } else {
+      alert("❌ PIN incorrecto. No puedes eliminar esta lista.");
+    }
+  }
+
+  function cancelarEdicion() {
+    limpiarFormulario();
+  }
+
+  function limpiarFormulario() {
+    document.getElementById('editId').value = '';
+    document.getElementById('nombre').value = '';
+    document.getElementById('tallas').value = '';
+    document.getElementById('deseos').value = '';
+    document.getElementById('links').value = '';
+    document.getElementById('pin').value = '';
+    document.querySelectorAll('input[name="categoria"]').forEach(c => c.checked = false);
+
+    document.getElementById('formTitle').innerText = "✍️ Publicar mi Lista";
+    document.getElementById('btnSubmit').innerText = "📌 Publicar en la Pizarra";
+    document.getElementById('btnCancel').style.display = "none";
+  }
+
   function filtrarTarjetas() {
     const textoBusqueda = document.getElementById('buscar').value.toLowerCase();
     const filtradas = listaWishlists.filter(item => 
       item.nombre.toLowerCase().includes(textoBusqueda) ||
-      item.deseos.toLowerCase().includes(textoBusqueda)
+      (item.deseos && item.deseos.toLowerCase().includes(textoBusqueda))
     );
     renderizarTarjetas(filtradas);
   }
