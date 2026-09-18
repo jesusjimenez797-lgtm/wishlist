@@ -1,9 +1,12 @@
-  <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Pizarra de Wishlists - Amor y Amistad</title>
+  <!-- Importar Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
   <style>
     :root {
       --primary: #e63946;
@@ -160,7 +163,6 @@
       margin-top: -8px;
     }
 
-    /* Pizarra pública */
     .wall-search {
       margin-bottom: 15px;
     }
@@ -184,7 +186,6 @@
       flex-direction: column;
       gap: 10px;
       box-shadow: 0 2px 8px rgba(0,0,0,0.03);
-      position: relative;
     }
 
     .wish-card-header {
@@ -246,7 +247,6 @@
       text-decoration: underline;
     }
 
-    /* Botones de acción en tarjetas */
     .card-actions {
       display: flex;
       gap: 8px;
@@ -291,7 +291,7 @@
 <div class="container">
   <header>
     <h1>💖 Pizarra Pública de Deseos 💖</h1>
-    <p>Publica tu wishlist para Amor y Amistad o busca la de tus amigos.</p>
+    <p>Publica tu wishlist para Amor y Amistad en tiempo real.</p>
   </header>
 
   <div class="layout">
@@ -299,7 +299,7 @@
     <div class="panel">
       <h2 id="formTitle">✍️ Publicar mi Lista</h2>
       
-      <input type="hidden" id="editId" value="">
+      <input type="hidden" id="editKey" value="">
 
       <div class="form-group">
         <label for="nombre">Tu Nombre o Apodo *</label>
@@ -327,13 +327,11 @@
         <textarea id="deseos" rows="3" placeholder="Ej: Me gustan las camisetas holgadas, perfumes dulces o audífonos negros..."></textarea>
       </div>
 
-      <!-- Campo Exclusivo para Enlaces -->
       <div class="form-group links-box">
         <label for="links">🔗 Links directos (Telegram, Instagram, tiendas...):</label>
         <textarea id="links" rows="2" placeholder="Pega aquí los enlaces directos (uno por línea)..."></textarea>
       </div>
 
-      <!-- PIN para poder editar/borrar luego -->
       <div class="form-group">
         <label for="pin">🔒 Crea un PIN de 4 dígitos (para editar o borrar después) *</label>
         <input type="password" id="pin" maxlength="4" placeholder="Ej: 1234" required>
@@ -343,7 +341,7 @@
       <button class="btn-cancel" id="btnCancel" style="display:none;" onclick="cancelarEdicion()">Cancelar Edición</button>
     </div>
 
-    <!-- Pizarra Pública -->
+    <!-- Pizarra -->
     <div class="panel">
       <h2>📋 Wishlists Guardadas</h2>
       
@@ -352,21 +350,41 @@
       </div>
 
       <div class="cards-container" id="cardsContainer">
-        <div class="empty-state">Cargando listas...</div>
+        <div class="empty-state">Cargando la pizarra pública...</div>
       </div>
     </div>
   </div>
 </div>
 
 <script>
-  let listaWishlists = [];
-
-  window.onload = function() {
-    cargarWishlists();
+  // ⚙️ REEMPLAZA ESTOS DATOS CON LOS QUE TE DA FIREBASE
+  const firebaseConfig = {
+    const firebaseConfig = {
+    apiKey: "AIzaSyDDIydBQIA2r9aEYQr3hKvpPEB1p8...",
+    authDomain: "amor-y-amistad-25dfa.firebaseapp.com",
+    databaseURL: "https://amor-y-amistad-25dfa-default-rtdb.firebaseio.com",
+    projectId: "amor-y-amistad-25dfa",
+    storageBucket: "amor-y-amistad-25dfa.appspot.com",
+    messagingSenderId: "596707897670",
+    appId: "1:596707897670:web:80874fc8a24fd17f...",
+    measurementId: "G-C8EKTZVP9G"
   };
 
+  // Inicializar Firebase
+  firebase.initializeApp(firebaseConfig);
+  const database = firebase.database();
+  const wishlistsRef = database.ref('wishlists');
+
+  let listaWishlists = {};
+
+  // Escuchar cambios en la base de datos en TIEMPO REAL para todos
+  wishlistsRef.on('value', (snapshot) => {
+    listaWishlists = snapshot.val() || {};
+    renderizarTarjetas(listaWishlists);
+  });
+
   function guardarDeseo() {
-    const editId = document.getElementById('editId').value;
+    const editKey = document.getElementById('editKey').value;
     const nombre = document.getElementById('nombre').value.trim();
     const tallas = document.getElementById('tallas').value.trim();
     const deseos = document.getElementById('deseos').value.trim();
@@ -386,70 +404,52 @@
       return;
     }
 
-    if (editId) {
-      // Modo Edición
-      const index = listaWishlists.findIndex(item => item.id == editId);
-      if (index !== -1) {
-        listaWishlists[index].nombre = nombre;
-        listaWishlists[index].categorias = categorias;
-        listaWishlists[index].tallas = tallas;
-        listaWishlists[index].deseos = deseos;
-        listaWishlists[index].links = links;
-        listaWishlists[index].pin = pin; // Actualiza el PIN si lo cambió
-      }
-      alert("¡Tu wishlist ha sido actualizada exitosamente!");
-    } else {
-      // Modo Nueva Publicación
-      const nuevaWishlist = {
-        id: Date.now(),
-        nombre: nombre,
-        categorias: categorias,
-        tallas: tallas,
-        deseos: deseos,
-        links: links,
-        pin: pin,
-        fecha: new Date().toLocaleDateString()
-      };
-      listaWishlists.unshift(nuevaWishlist);
-      alert("¡Tu lista de deseos ha sido publicada en la pizarra!");
-    }
+    const datos = {
+      nombre: nombre,
+      categorias: categorias,
+      tallas: tallas,
+      deseos: deseos,
+      links: links,
+      pin: pin,
+      fecha: new Date().toLocaleDateString()
+    };
 
-    localStorage.setItem('wishlists_amor_amistad', JSON.stringify(listaWishlists));
-    limpiarFormulario();
-    renderizarTarjetas(listaWishlists);
-  }
-
-  function cargarWishlists() {
-    const datosGuardados = localStorage.getItem('wishlists_amor_amistad');
-    if (datosGuardados) {
-      listaWishlists = JSON.parse(datosGuardados);
-    } else {
-      listaWishlists = [
-        {
-          id: 1,
-          nombre: "Sofía",
-          categorias: ["Moda & Ropa", "Perfumes"],
-          tallas: "Camiseta S, Calzado 37",
-          deseos: "Prefiero tonos neutros o pasteles.",
-          links: "https://instagram.com/ejemplo-tienda",
-          pin: "1234",
-          fecha: "18/09/2026"
+    if (editKey) {
+      // Editar en Firebase
+      wishlistsRef.child(editKey).update(datos, (error) => {
+        if (!error) {
+          alert("¡Tu wishlist ha sido actualizada exitosamente!");
+          limpiarFormulario();
+        } else {
+          alert("Error al actualizar.");
         }
-      ];
+      });
+    } else {
+      // Guardar nuevo registro en Firebase
+      wishlistsRef.push(datos, (error) => {
+        if (!error) {
+          alert("¡Tu lista de deseos se ha publicado globalmente en la pizarra!");
+          limpiarFormulario();
+        } else {
+          alert("Error al publicar.");
+        }
+      });
     }
-    renderizarTarjetas(listaWishlists);
   }
 
-  function renderizarTarjetas(lista) {
+  function renderizarTarjetas(datosObjetos) {
     const container = document.getElementById('cardsContainer');
     container.innerHTML = '';
 
-    if (lista.length === 0) {
-      container.innerHTML = '<div class="empty-state">No se encontraron listas de deseos.</div>';
+    const keys = Object.keys(datosObjetos).reverse(); // Mostrar las más recientes primero
+
+    if (keys.length === 0) {
+      container.innerHTML = '<div class="empty-state">Aún no hay publicaciones en la pizarra. ¡Sé el primero!</div>';
       return;
     }
 
-    lista.forEach(item => {
+    keys.forEach(key => {
+      const item = datosObjetos[key];
       const card = document.createElement('div');
       card.className = 'wish-card';
 
@@ -485,8 +485,8 @@
         ${linksHTML}
 
         <div class="card-actions">
-          <button class="btn-action edit" onclick="solicitarEditar(${item.id})">✏️ Editar</button>
-          <button class="btn-action delete" onclick="solicitarEliminar(${item.id})">🗑️ Eliminar</button>
+          <button class="btn-action edit" onclick="solicitarEditar('${key}')">✏️ Editar</button>
+          <button class="btn-action delete" onclick="solicitarEliminar('${key}')">🗑️ Eliminar</button>
         </div>
       `;
 
@@ -494,16 +494,15 @@
     });
   }
 
-  function solicitarEditar(id) {
-    const item = listaWishlists.find(i => i.id == id);
+  function solicitarEditar(key) {
+    const item = listaWishlists[key];
     if (!item) return;
 
     const pinIngresado = prompt(`Ingresa tu PIN de 4 dígitos para editar la lista de ${item.nombre}:`);
-    if (pinIngresado === null) return; // Canceló
+    if (pinIngresado === null) return;
 
     if (pinIngresado === item.pin) {
-      // Cargar datos en el formulario
-      document.getElementById('editId').value = item.id;
+      document.getElementById('editKey').value = key;
       document.getElementById('nombre').value = item.nombre;
       document.getElementById('tallas').value = item.tallas || '';
       document.getElementById('deseos').value = item.deseos || '';
@@ -514,33 +513,31 @@
         c.checked = item.categorias ? item.categorias.includes(c.value) : false;
       });
 
-      // Cambiar interfaz a Modo Edición
       document.getElementById('formTitle').innerText = "✏️ Editar mi Lista";
       document.getElementById('btnSubmit').innerText = "💾 Guardar Cambios";
       document.getElementById('btnCancel').style.display = "block";
 
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } else {
-      alert("❌ PIN incorrecto. No puedes editar esta lista.");
+      alert("❌ PIN incorrecto.");
     }
   }
 
-  function solicitarEliminar(id) {
-    const item = listaWishlists.find(i => i.id == id);
+  function solicitarEliminar(key) {
+    const item = listaWishlists[key];
     if (!item) return;
 
     const pinIngresado = prompt(`Ingresa tu PIN de 4 dígitos para ELIMINAR la lista de ${item.nombre}:`);
-    if (pinIngresado === null) return; // Canceló
+    if (pinIngresado === null) return;
 
     if (pinIngresado === item.pin) {
       if (confirm(`¿Estás seguro de que quieres eliminar la lista de ${item.nombre}?`)) {
-        listaWishlists = listaWishlists.filter(i => i.id != id);
-        localStorage.setItem('wishlists_amor_amistad', JSON.stringify(listaWishlists));
-        renderizarTarjetas(listaWishlists);
-        alert("🗑️ Lista eliminada correctamente.");
+        wishlistsRef.child(key).remove()
+          .then(() => alert("🗑️ Lista eliminada correctamente."))
+          .catch(() => alert("Error al eliminar."));
       }
     } else {
-      alert("❌ PIN incorrecto. No puedes eliminar esta lista.");
+      alert("❌ PIN incorrecto.");
     }
   }
 
@@ -549,7 +546,7 @@
   }
 
   function limpiarFormulario() {
-    document.getElementById('editId').value = '';
+    document.getElementById('editKey').value = '';
     document.getElementById('nombre').value = '';
     document.getElementById('tallas').value = '';
     document.getElementById('deseos').value = '';
@@ -564,11 +561,17 @@
 
   function filtrarTarjetas() {
     const textoBusqueda = document.getElementById('buscar').value.toLowerCase();
-    const filtradas = listaWishlists.filter(item => 
-      item.nombre.toLowerCase().includes(textoBusqueda) ||
-      (item.deseos && item.deseos.toLowerCase().includes(textoBusqueda))
-    );
-    renderizarTarjetas(filtradas);
+    const filtrados = {};
+    
+    Object.keys(listaWishlists).forEach(key => {
+      const item = listaWishlists[key];
+      if (item.nombre.toLowerCase().includes(textoBusqueda) || 
+         (item.deseos && item.deseos.toLowerCase().includes(textoBusqueda))) {
+        filtrados[key] = item;
+      }
+    });
+
+    renderizarTarjetas(filtrados);
   }
 </script>
 
