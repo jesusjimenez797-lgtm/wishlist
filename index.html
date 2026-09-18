@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Pizarra de Wishlists - Amor y Amistad</title>
-  <!-- Importar Firebase SDKs -->
+  <!-- Importar Firebase SDKs Compatibles -->
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
   <style>
@@ -357,16 +357,15 @@
 </div>
 
 <script>
-  // ⚙️ REEMPLAZA ESTOS DATOS CON LOS QUE TE DA FIREBASE
+  // ⚙️ Configuración de Firebase unificada
   const firebaseConfig = {
-    const firebaseConfig = {
-    apiKey: "AIzaSyDDIydBQIA2r9aEYQr3hKvpPEB1p8...",
+    apiKey: "AIzaSyDDIydBQIA2r9aEYQr3hKvpPEB1p8kueTc",
     authDomain: "amor-y-amistad-25dfa.firebaseapp.com",
     databaseURL: "https://amor-y-amistad-25dfa-default-rtdb.firebaseio.com",
     projectId: "amor-y-amistad-25dfa",
-    storageBucket: "amor-y-amistad-25dfa.appspot.com",
+    storageBucket: "amor-y-amistad-25dfa.firebasestorage.app",
     messagingSenderId: "596707897670",
-    appId: "1:596707897670:web:80874fc8a24fd17f...",
+    appId: "1:596707897670:web:80874fc8a24fd17fde7547",
     measurementId: "G-C8EKTZVP9G"
   };
 
@@ -377,7 +376,7 @@
 
   let listaWishlists = {};
 
-  // Escuchar cambios en la base de datos en TIEMPO REAL para todos
+  // Escuchar cambios en la base de datos en TIEMPO REAL
   wishlistsRef.on('value', (snapshot) => {
     listaWishlists = snapshot.val() || {};
     renderizarTarjetas(listaWishlists);
@@ -415,7 +414,6 @@
     };
 
     if (editKey) {
-      // Editar en Firebase
       wishlistsRef.child(editKey).update(datos, (error) => {
         if (!error) {
           alert("¡Tu wishlist ha sido actualizada exitosamente!");
@@ -425,7 +423,6 @@
         }
       });
     } else {
-      // Guardar nuevo registro en Firebase
       wishlistsRef.push(datos, (error) => {
         if (!error) {
           alert("¡Tu lista de deseos se ha publicado globalmente en la pizarra!");
@@ -441,7 +438,7 @@
     const container = document.getElementById('cardsContainer');
     container.innerHTML = '';
 
-    const keys = Object.keys(datosObjetos).reverse(); // Mostrar las más recientes primero
+    const keys = Object.keys(datosObjetos).reverse();
 
     if (keys.length === 0) {
       container.innerHTML = '<div class="empty-state">Aún no hay publicaciones en la pizarra. ¡Sé el primero!</div>';
