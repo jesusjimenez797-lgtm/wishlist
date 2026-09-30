@@ -3,15 +3,18 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Pizarra de Wishlists - Amor y Amistad</title>
-  <!-- Importar Firebase SDKs Compatibles -->
+  <title>Cumpleaños de Alexa Gualdrón 🎂🎉</title>
+  <!-- Firebase SDKs -->
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+  <!-- Canvas Confetti Library -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
   <style>
     :root {
-      --primary: #e63946;
-      --primary-hover: #c52a36;
-      --bg: #fff0f3;
+      --primary: #ff477e;
+      --primary-hover: #ff0054;
+      --secondary: #70e000;
+      --bg: #fff0f5;
       --card-bg: #ffffff;
       --text: #2b2d42;
       --border: #ffccd5;
@@ -35,31 +38,98 @@
 
     .container {
       width: 100%;
-      max-width: 900px;
+      max-width: 950px;
       display: flex;
       flex-direction: column;
-      gap: 30px;
+      gap: 25px;
     }
 
+    /* Hero Banner */
     header {
       text-align: center;
-      background: var(--card-bg);
-      padding: 25px;
-      border-radius: 16px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+      background: linear-gradient(135deg, #ff758c 0%, #ff7eb3 100%);
+      color: white;
+      padding: 35px 20px;
+      border-radius: 20px;
+      box-shadow: 0 10px 25px rgba(255, 71, 126, 0.2);
+      position: relative;
+      overflow: hidden;
     }
 
     header h1 {
-      color: var(--primary);
-      font-size: 28px;
+      font-size: 32px;
       margin-bottom: 8px;
+      text-shadow: 1px 1px 3px rgba(0,0,0,0.15);
     }
 
     header p {
-      color: #666;
-      font-size: 15px;
+      font-size: 16px;
+      opacity: 0.95;
     }
 
+    .btn-confetti {
+      margin-top: 15px;
+      background: #ffffff;
+      color: var(--primary);
+      border: none;
+      padding: 10px 22px;
+      border-radius: 25px;
+      font-size: 15px;
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      transition: transform 0.2s, background 0.2s;
+    }
+
+    .btn-confetti:hover {
+      transform: scale(1.05);
+      background: #fff5f8;
+    }
+
+    /* Contador Regresivo */
+    .countdown-box {
+      background: var(--card-bg);
+      border-radius: 16px;
+      padding: 20px;
+      text-align: center;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+      border: 2px dashed var(--border);
+    }
+
+    .countdown-title {
+      font-size: 14px;
+      font-weight: bold;
+      color: #777;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 12px;
+    }
+
+    .timer-grid {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+    }
+
+    .timer-segment {
+      background: #fff0f3;
+      padding: 10px 15px;
+      border-radius: 12px;
+      min-width: 65px;
+    }
+
+    .timer-number {
+      font-size: 24px;
+      font-weight: bold;
+      color: var(--primary);
+    }
+
+    .timer-label {
+      font-size: 11px;
+      color: #666;
+    }
+
+    /* Layout Grid */
     .layout {
       display: grid;
       grid-template-columns: 1fr;
@@ -87,6 +157,9 @@
       color: var(--primary);
       border-bottom: 2px solid var(--border);
       padding-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
 
     .form-group {
@@ -101,7 +174,7 @@
       color: #444;
     }
 
-    input[type="text"], input[type="password"], textarea {
+    input[type="text"], input[type="password"], textarea, select {
       width: 100%;
       padding: 10px 12px;
       border: 1.5px solid var(--border);
@@ -111,29 +184,8 @@
       transition: border-color 0.2s;
     }
 
-    input:focus, textarea:focus {
+    input:focus, textarea:focus, select:focus {
       border-color: var(--primary);
-    }
-
-    .checkbox-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 8px;
-    }
-
-    .checkbox-item {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 13px;
-      cursor: pointer;
-    }
-
-    .links-box {
-      background-color: #f8f9fa;
-      border: 2px dashed #d6e2e9;
-      padding: 12px;
-      border-radius: 8px;
     }
 
     .btn-submit {
@@ -163,15 +215,11 @@
       margin-top: -8px;
     }
 
-    .wall-search {
-      margin-bottom: 15px;
-    }
-
     .cards-container {
       display: flex;
       flex-direction: column;
       gap: 15px;
-      max-height: 600px;
+      max-height: 550px;
       overflow-y: auto;
       padding-right: 5px;
     }
@@ -184,7 +232,7 @@
       padding: 15px;
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      gap: 8px;
       box-shadow: 0 2px 8px rgba(0,0,0,0.03);
     }
 
@@ -196,7 +244,7 @@
 
     .wish-card-name {
       font-weight: bold;
-      font-size: 16px;
+      font-size: 15px;
       color: var(--primary);
     }
 
@@ -205,54 +253,17 @@
       color: #aaa;
     }
 
-    .tag-container {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 5px;
-    }
-
-    .tag {
-      background: #ffe5ec;
-      color: var(--primary);
-      font-size: 11px;
-      padding: 3px 8px;
-      border-radius: 12px;
-      font-weight: 600;
-    }
-
     .detail-item {
       font-size: 13px;
       color: #555;
     }
 
-    .detail-item strong {
-      color: #333;
-    }
-
-    .links-list {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-      margin-top: 5px;
-    }
-
-    .link-anchor {
-      font-size: 12px;
-      color: #0077b6;
-      word-break: break-all;
-      text-decoration: none;
-    }
-
-    .link-anchor:hover {
-      text-decoration: underline;
-    }
-
     .card-actions {
       display: flex;
       gap: 8px;
-      margin-top: 8px;
+      margin-top: 6px;
       border-top: 1px dashed #eee;
-      padding-top: 8px;
+      padding-top: 6px;
       justify-content: flex-end;
     }
 
@@ -263,43 +274,96 @@
       border-radius: 6px;
       font-size: 12px;
       cursor: pointer;
-      transition: all 0.2s;
     }
 
-    .btn-action.edit:hover {
-      background-color: #e2eafc;
-      border-color: #0077b6;
-      color: #0077b6;
-    }
-
-    .btn-action.delete:hover {
-      background-color: #ffe5ec;
-      border-color: var(--primary);
-      color: var(--primary);
-    }
+    .btn-action.edit:hover { background: #e2eafc; color: #0077b6; }
+    .btn-action.delete:hover { background: #ffe5ec; color: var(--primary); }
 
     .empty-state {
       text-align: center;
       color: #888;
       font-size: 14px;
-      padding: 30px 0;
+      padding: 25px 0;
+    }
+
+    /* Ideas de Regalos */
+    .ideas-box {
+      background: #fff9fa;
+      border: 1.5px solid var(--border);
+      border-radius: 12px;
+      padding: 15px;
+    }
+
+    .ideas-title {
+      font-weight: bold;
+      font-size: 14px;
+      color: var(--primary);
+      margin-bottom: 8px;
+    }
+
+    .ideas-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .idea-badge {
+      background: #ffffff;
+      border: 1px solid var(--border);
+      padding: 4px 10px;
+      border-radius: 15px;
+      font-size: 12px;
+      color: #555;
     }
   </style>
 </head>
 <body>
 
 <div class="container">
+  <!-- Header con Lanzador de Confeti -->
   <header>
-    <h1>💖 Pizarra Pública de Deseos 💖</h1>
-    <p>Publica tu wishlist para Amor y Amistad en tiempo real.</p>
+    <h1>🎉 ¡Celebrando a Alexa Gualdrón! 🎂</h1>
+    <p>Pizarra especial de Cumpleaños & Wishlist • 26 de Noviembre</p>
+    <button class="btn-confetti" onclick="lanzarConfeti()">🎊 ¡Lanzar Confeti!</button>
   </header>
 
+  <!-- Contador Regresivo -->
+  <div class="countdown-box">
+    <div class="countdown-title">⏳ Cuenta Regresiva para su Cumpleaños</div>
+    <div class="timer-grid">
+      <div class="timer-segment">
+        <div class="timer-number" id="days">00</div>
+        <div class="timer-label">Días</div>
+      </div>
+      <div class="timer-segment">
+        <div class="timer-number" id="hours">00</div>
+        <div class="timer-label">Horas</div>
+      </div>
+      <div class="timer-segment">
+        <div class="timer-number" id="minutes">00</div>
+        <div class="timer-label">Min</div>
+      </div>
+      <div class="timer-segment">
+        <div class="timer-number" id="seconds">00</div>
+        <div class="timer-label">Seg</div>
+      </div>
+    </div>
+  </div>
+
   <div class="layout">
-    <!-- Formulario -->
+    <!-- Panel 1: Escribir Mensaje / Sugerir Deseo -->
     <div class="panel">
-      <h2 id="formTitle">✍️ Publicar mi Lista</h2>
+      <h2 id="formTitle">✍️ Escribir a Alexa</h2>
       
       <input type="hidden" id="editKey" value="">
+
+      <div class="form-group">
+        <label for="tipo">¿Qué vas a publicar?</label>
+        <select id="tipo">
+          <option value="💌 Mensaje de Cumpleaños">💌 Mensaje / Felicitación</option>
+          <option value="🎁 Sugerencia de Regalo">🎁 Idea de Regalo / Talla / Gusto</option>
+        </select>
+      </div>
 
       <div class="form-group">
         <label for="nombre">Tu Nombre o Apodo *</label>
@@ -307,57 +371,50 @@
       </div>
 
       <div class="form-group">
-        <label>Categorías de interés:</label>
-        <div class="checkbox-grid">
-          <label class="checkbox-item"><input type="checkbox" name="categoria" value="Moda & Ropa"> 👗 Moda & Ropa</label>
-          <label class="checkbox-item"><input type="checkbox" name="categoria" value="Tecnología"> 🎧 Tecnología</label>
-          <label class="checkbox-item"><input type="checkbox" name="categoria" value="Perfumes"> 🧴 Perfumes</label>
-          <label class="checkbox-item"><input type="checkbox" name="categoria" value="Libros / Juegos"> 📚 Libros / Juegos</label>
-          <label class="checkbox-item"><input type="checkbox" name="categoria" value="Accesorios"> ⌚ Accesorios</label>
-        </div>
+        <label for="contenido">Mensaje o Detalle del Regalo *</label>
+        <textarea id="contenido" rows="4" placeholder="Ej: ¡Feliz cumple Alexa! Que la pases súper bien..." required></textarea>
       </div>
 
       <div class="form-group">
-        <label for="tallas">Tallas (Calzado, Camisetas, etc.):</label>
-        <input type="text" id="tallas" placeholder="Ej: Camiseta M, Tenis 41">
+        <label for="links">🔗 Link sugerido o de tienda (Opcional):</label>
+        <input type="text" id="links" placeholder="Ej: https://instagram.com/o_tienda">
       </div>
 
       <div class="form-group">
-        <label for="deseos">Detalles o cosas específicas que te gustan:</label>
-        <textarea id="deseos" rows="3" placeholder="Ej: Me gustan las camisetas holgadas, perfumes dulces o audífonos negros..."></textarea>
-      </div>
-
-      <div class="form-group links-box">
-        <label for="links">🔗 Links directos (Telegram, Instagram, tiendas...):</label>
-        <textarea id="links" rows="2" placeholder="Pega aquí los enlaces directos (uno por línea)..."></textarea>
-      </div>
-
-      <div class="form-group">
-        <label for="pin">🔒 Crea un PIN de 4 dígitos (para editar o borrar después) *</label>
+        <label for="pin">🔒 PIN de 4 dígitos (para editar/borrar tu tarjeta) *</label>
         <input type="password" id="pin" maxlength="4" placeholder="Ej: 1234" required>
       </div>
 
-      <button class="btn-submit" id="btnSubmit" onclick="guardarDeseo()">📌 Publicar en la Pizarra</button>
+      <button class="btn-submit" id="btnSubmit" onclick="guardarPublicacion()">📌 Publicar en la Pizarra</button>
       <button class="btn-cancel" id="btnCancel" style="display:none;" onclick="cancelarEdicion()">Cancelar Edición</button>
+
+      <!-- Cuadro de Inspiración para Regalos -->
+      <div class="ideas-box">
+        <div class="ideas-title">💡 ¿No sabes qué regalarle? Ideas populares:</div>
+        <div class="ideas-list">
+          <span class="idea-badge">🧴 Perfumes / Cremas</span>
+          <span class="idea-badge">💄 Maquillaje / Skincare</span>
+          <span class="idea-badge">👗 Bono de Ropa</span>
+          <span class="idea-badge">🎧 Audífonos / Accesorios</span>
+          <span class="idea-badge">🍫 Chocolates / Dulces</span>
+          <span class="idea-badge">☕ Taza / Termo personalizado</span>
+        </div>
+      </div>
     </div>
 
-    <!-- Pizarra -->
+    <!-- Panel 2: Muro y Pizarra -->
     <div class="panel">
-      <h2>📋 Wishlists Guardadas</h2>
+      <h2>📋 Muro de Cumpleaños</h2>
       
-      <div class="wall-search">
-        <input type="text" id="buscar" placeholder="🔍 Buscar por nombre..." oninput="filtrarTarjetas()">
-      </div>
-
       <div class="cards-container" id="cardsContainer">
-        <div class="empty-state">Cargando la pizarra pública...</div>
+        <div class="empty-state">Cargando los mensajes de cumpleaños...</div>
       </div>
     </div>
   </div>
 </div>
 
 <script>
-  // ⚙️ Configuración de Firebase unificada
+  // ⚙️ Configuración de Firebase
   const firebaseConfig = {
     apiKey: "AIzaSyDDIydBQIA2r9aEYQr3hKvpPEB1p8kueTc",
     authDomain: "amor-y-amistad-25dfa.firebaseapp.com",
@@ -369,121 +426,96 @@
     measurementId: "G-C8EKTZVP9G"
   };
 
-  // Inicializar Firebase
   firebase.initializeApp(firebaseConfig);
   const database = firebase.database();
-  const wishlistsRef = database.ref('wishlists');
+  const wishlistsRef = database.ref('cumple_alexa');
 
-  let listaWishlists = {};
+  let publicaciones = {};
 
-  // Escuchar cambios en la base de datos en TIEMPO REAL
+  // Escuchar publicaciones en tiempo real
   wishlistsRef.on('value', (snapshot) => {
-    listaWishlists = snapshot.val() || {};
-    renderizarTarjetas(listaWishlists);
+    publicaciones = snapshot.val() || {};
+    renderizarTarjetas(publicaciones);
   });
 
-  function guardarDeseo() {
+  function guardarPublicacion() {
     const editKey = document.getElementById('editKey').value;
+    const tipo = document.getElementById('tipo').value;
     const nombre = document.getElementById('nombre').value.trim();
-    const tallas = document.getElementById('tallas').value.trim();
-    const deseos = document.getElementById('deseos').value.trim();
+    const contenido = document.getElementById('contenido').value.trim();
     const links = document.getElementById('links').value.trim();
     const pin = document.getElementById('pin').value.trim();
 
-    const categorias = Array.from(document.querySelectorAll('input[name="categoria"]:checked'))
-                             .map(c => c.value);
-
-    if (!nombre) {
-      alert("Por favor coloca tu nombre.");
+    if (!nombre || !contenido) {
+      alert("Por favor completa tu nombre y el contenido del mensaje.");
       return;
     }
 
     if (!pin || pin.length < 4) {
-      alert("Por favor escribe un PIN de 4 dígitos para proteger tu publicación.");
+      alert("Por favor ingresa un PIN de 4 dígitos.");
       return;
     }
 
     const datos = {
+      tipo: tipo,
       nombre: nombre,
-      categorias: categorias,
-      tallas: tallas,
-      deseos: deseos,
+      contenido: contenido,
       links: links,
       pin: pin,
       fecha: new Date().toLocaleDateString()
     };
 
     if (editKey) {
-      wishlistsRef.child(editKey).update(datos, (error) => {
-        if (!error) {
-          alert("¡Tu wishlist ha sido actualizada exitosamente!");
+      wishlistsRef.child(editKey).update(datos, (err) => {
+        if (!err) {
+          alert("¡Publicación actualizada!");
           limpiarFormulario();
-        } else {
-          alert("Error al actualizar.");
         }
       });
     } else {
-      wishlistsRef.push(datos, (error) => {
-        if (!error) {
-          alert("¡Tu lista de deseos se ha publicado globalmente en la pizarra!");
+      wishlistsRef.push(datos, (err) => {
+        if (!err) {
+          lanzarConfeti();
+          alert("¡Publicado en el muro de Alexa!");
           limpiarFormulario();
-        } else {
-          alert("Error al publicar.");
         }
       });
     }
   }
 
-  function renderizarTarjetas(datosObjetos) {
+  function renderizarTarjetas(datos) {
     const container = document.getElementById('cardsContainer');
     container.innerHTML = '';
 
-    const keys = Object.keys(datosObjetos).reverse();
+    const keys = Object.keys(datos).reverse();
 
     if (keys.length === 0) {
-      container.innerHTML = '<div class="empty-state">Aún no hay publicaciones en la pizarra. ¡Sé el primero!</div>';
+      container.innerHTML = '<div class="empty-state">Aún no hay mensajes. ¡Sé el primero en felicitar a Alexa! 🎂</div>';
       return;
     }
 
     keys.forEach(key => {
-      const item = datosObjetos[key];
+      const item = datos[key];
       const card = document.createElement('div');
       card.className = 'wish-card';
 
-      let tagsHTML = item.categorias ? item.categorias.map(cat => `<span class="tag">${cat}</span>`).join('') : '';
-      
-      let linksHTML = '';
+      let linkHTML = '';
       if (item.links) {
-        const lineas = item.links.split('\n');
-        const enlaces = lineas.map(link => {
-          let url = link.trim();
-          if (url && !url.startsWith('http')) url = 'https://' + url;
-          return url ? `<a class="link-anchor" href="${url}" target="_blank">🔗 ${url}</a>` : '';
-        }).join('');
-
-        if (enlaces) {
-          linksHTML = `
-            <div class="detail-item" style="margin-top: 6px;">
-              <strong>Enlaces sugeridos:</strong>
-              <div class="links-list">${enlaces}</div>
-            </div>
-          `;
-        }
+        let url = item.links.trim();
+        if (!url.startsWith('http')) url = 'https://' + url;
+        linkHTML = `<div class="detail-item"><a href="${url}" target="_blank" style="color: var(--primary);">🔗 Ver enlace sugerido</a></div>`;
       }
 
       card.innerHTML = `
         <div class="wish-card-header">
-          <span class="wish-card-name">${item.nombre}</span>
+          <span class="wish-card-name">${item.tipo || '💌 Mensaje'} - De: ${item.nombre}</span>
           <span class="wish-card-date">${item.fecha}</span>
         </div>
-        ${tagsHTML ? `<div class="tag-container">${tagsHTML}</div>` : ''}
-        ${item.tallas ? `<div class="detail-item"><strong>Tallas:</strong> ${item.tallas}</div>` : ''}
-        ${item.deseos ? `<div class="detail-item"><strong>Detalles / Deseos:</strong> ${item.deseos}</div>` : ''}
-        ${linksHTML}
-
+        <div class="detail-item" style="font-size: 14px; color: #333; white-space: pre-line;">${item.contenido}</div>
+        ${linkHTML}
         <div class="card-actions">
           <button class="btn-action edit" onclick="solicitarEditar('${key}')">✏️ Editar</button>
-          <button class="btn-action delete" onclick="solicitarEliminar('${key}')">🗑️ Eliminar</button>
+          <button class="btn-action delete" onclick="solicitarEliminar('${key}')">🗑️ Borrar</button>
         </div>
       `;
 
@@ -492,84 +524,89 @@
   }
 
   function solicitarEditar(key) {
-    const item = listaWishlists[key];
+    const item = publicaciones[key];
     if (!item) return;
 
-    const pinIngresado = prompt(`Ingresa tu PIN de 4 dígitos para editar la lista de ${item.nombre}:`);
-    if (pinIngresado === null) return;
-
+    const pinIngresado = prompt(`Ingresa tu PIN de 4 dígitos para editar la tarjeta:`);
     if (pinIngresado === item.pin) {
       document.getElementById('editKey').value = key;
+      document.getElementById('tipo').value = item.tipo || '💌 Mensaje de Cumpleaños';
       document.getElementById('nombre').value = item.nombre;
-      document.getElementById('tallas').value = item.tallas || '';
-      document.getElementById('deseos').value = item.deseos || '';
+      document.getElementById('contenido').value = item.contenido;
       document.getElementById('links').value = item.links || '';
-      document.getElementById('pin').value = item.pin || '';
+      document.getElementById('pin').value = item.pin;
 
-      document.querySelectorAll('input[name="categoria"]').forEach(c => {
-        c.checked = item.categorias ? item.categorias.includes(c.value) : false;
-      });
-
-      document.getElementById('formTitle').innerText = "✏️ Editar mi Lista";
+      document.getElementById('formTitle').innerText = "✏️ Editar Publicación";
       document.getElementById('btnSubmit').innerText = "💾 Guardar Cambios";
       document.getElementById('btnCancel').style.display = "block";
-
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    } else {
+    } else if (pinIngresado !== null) {
       alert("❌ PIN incorrecto.");
     }
   }
 
   function solicitarEliminar(key) {
-    const item = listaWishlists[key];
+    const item = publicaciones[key];
     if (!item) return;
 
-    const pinIngresado = prompt(`Ingresa tu PIN de 4 dígitos para ELIMINAR la lista de ${item.nombre}:`);
-    if (pinIngresado === null) return;
-
+    const pinIngresado = prompt(`Ingresa tu PIN de 4 dígitos para eliminar la tarjeta:`);
     if (pinIngresado === item.pin) {
-      if (confirm(`¿Estás seguro de que quieres eliminar la lista de ${item.nombre}?`)) {
-        wishlistsRef.child(key).remove()
-          .then(() => alert("🗑️ Lista eliminada correctamente."))
-          .catch(() => alert("Error al eliminar."));
+      if (confirm("¿Estás seguro de borrar este mensaje?")) {
+        wishlistsRef.child(key).remove();
       }
-    } else {
+    } else if (pinIngresado !== null) {
       alert("❌ PIN incorrecto.");
     }
+  }
+
+  function limpiarFormulario() {
+    document.getElementById('editKey').value = '';
+    document.getElementById('nombre').value = '';
+    document.getElementById('contenido').value = '';
+    document.getElementById('links').value = '';
+    document.getElementById('pin').value = '';
+
+    document.getElementById('formTitle').innerText = "✍️ Escribir a Alexa";
+    document.getElementById('btnSubmit').innerText = "📌 Publicar en la Pizarra";
+    document.getElementById('btnCancel').style.display = "none";
   }
 
   function cancelarEdicion() {
     limpiarFormulario();
   }
 
-  function limpiarFormulario() {
-    document.getElementById('editKey').value = '';
-    document.getElementById('nombre').value = '';
-    document.getElementById('tallas').value = '';
-    document.getElementById('deseos').value = '';
-    document.getElementById('links').value = '';
-    document.getElementById('pin').value = '';
-    document.querySelectorAll('input[name="categoria"]').forEach(c => c.checked = false);
-
-    document.getElementById('formTitle').innerText = "✍️ Publicar mi Lista";
-    document.getElementById('btnSubmit').innerText = "📌 Publicar en la Pizarra";
-    document.getElementById('btnCancel').style.display = "none";
-  }
-
-  function filtrarTarjetas() {
-    const textoBusqueda = document.getElementById('buscar').value.toLowerCase();
-    const filtrados = {};
-    
-    Object.keys(listaWishlists).forEach(key => {
-      const item = listaWishlists[key];
-      if (item.nombre.toLowerCase().includes(textoBusqueda) || 
-         (item.deseos && item.deseos.toLowerCase().includes(textoBusqueda))) {
-        filtrados[key] = item;
-      }
+  function lanzarConfeti() {
+    confetti({
+      particleCount: 100,
+      spread: 70,
+      origin: { y: 0.6 }
     });
-
-    renderizarTarjetas(filtrados);
   }
+
+  // Lógica del Contador Regresivo
+  function actualizarContador() {
+    const ahora = new Date();
+    let anoActual = ahora.getFullYear();
+    let fechaCumple = new Date(anoActual, 10, 26); // Mes 10 = Noviembre (0-indexed)
+
+    if (ahora > fechaCumple) {
+      fechaCumple = new Date(anoActual + 1, 10, 26);
+    }
+
+    const diferencia = fechaCumple - ahora;
+
+    const d = Math.floor(diferencia / (1000 * 60 * 60 * 24));
+    const h = Math.floor((diferencia % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const m = Math.floor((diferencia % (1000 * 60 * 60)) / (1000 * 60));
+    const s = Math.floor((diferencia % (1000 * 60)) / 1000);
+
+    document.getElementById('days').innerText = d < 10 ? '0' + d : d;
+    document.getElementById('hours').innerText = h < 10 ? '0' + h : h;
+    document.getElementById('minutes').innerText = m < 10 ? '0' + m : m;
+    document.getElementById('seconds').innerText = s < 10 ? '0' + s : s;
+  }
+
+  setInterval(actualizarContador, 1000);
+  actualizarContador();
 </script>
 
 </body>
