@@ -3,37 +3,59 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Cumpleaños de Alexa Gualdrón 🎂🎉</title>
+  <title>¡Happy Birthday Alexa Gualdrón! 🎂🎉</title>
   <!-- Firebase SDKs -->
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
   <!-- Canvas Confetti Library -->
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
   <style>
+    @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Poppins:wght@400;600&display=swap');
+
     :root {
-      --primary: #ff477e;
-      --primary-hover: #ff0054;
-      --secondary: #70e000;
-      --bg: #fff0f5;
+      --pink: #ff477e;
+      --purple: #7209b7;
+      --yellow: #f72585;
+      --bg: #1a0826;
       --card-bg: #ffffff;
       --text: #2b2d42;
-      --border: #ffccd5;
     }
 
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      font-family: 'Fredoka', 'Poppins', sans-serif;
     }
 
     body {
-      background-color: var(--bg);
-      color: var(--text);
-      padding: 20px;
+      background: linear-gradient(135deg, #10002b 0%, #240046 50%, #3c096c 100%);
+      color: #fff;
+      padding: 20px 10px;
       display: flex;
       justify-content: center;
       min-height: 100vh;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* Globos animados de fondo */
+    .balloon {
+      position: fixed;
+      bottom: -100px;
+      opacity: 0.7;
+      border-radius: 50%;
+      animation: floatUp 12s infinite ease-in;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    @keyframes floatUp {
+      0% { transform: translateY(0) rotate(0deg); opacity: 0.8; }
+      100% { transform: translateY(-120vh) rotate(360deg); opacity: 0; }
     }
 
     .container {
@@ -42,64 +64,77 @@
       display: flex;
       flex-direction: column;
       gap: 25px;
+      z-index: 10;
     }
 
-    /* Hero Banner */
+    /* Party Banner Header */
     header {
       text-align: center;
-      background: linear-gradient(135deg, #ff758c 0%, #ff7eb3 100%);
+      background: linear-gradient(135deg, #f72585 0%, #7209b7 100%);
       color: white;
-      padding: 35px 20px;
-      border-radius: 20px;
-      box-shadow: 0 10px 25px rgba(255, 71, 126, 0.2);
+      padding: 40px 20px;
+      border-radius: 25px;
+      box-shadow: 0 10px 30px rgba(247, 37, 133, 0.4);
       position: relative;
-      overflow: hidden;
+      border: 3px solid rgba(255,255,255,0.2);
     }
 
     header h1 {
-      font-size: 32px;
-      margin-bottom: 8px;
-      text-shadow: 1px 1px 3px rgba(0,0,0,0.15);
+      font-size: 38px;
+      margin-bottom: 5px;
+      text-shadow: 3px 3px 0px #3c096c;
+      letter-spacing: 1px;
     }
 
     header p {
-      font-size: 16px;
-      opacity: 0.95;
+      font-size: 18px;
+      color: #ffde00;
+      font-weight: 600;
     }
 
-    .btn-confetti {
-      margin-top: 15px;
-      background: #ffffff;
-      color: var(--primary);
+    .header-actions {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      margin-top: 20px;
+      flex-wrap: wrap;
+    }
+
+    .btn-party {
+      background: #ffde00;
+      color: #1a0826;
       border: none;
-      padding: 10px 22px;
-      border-radius: 25px;
-      font-size: 15px;
+      padding: 12px 24px;
+      border-radius: 30px;
+      font-size: 16px;
       font-weight: bold;
       cursor: pointer;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-      transition: transform 0.2s, background 0.2s;
+      box-shadow: 0 5px 15px rgba(255, 222, 0, 0.4);
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
 
-    .btn-confetti:hover {
-      transform: scale(1.05);
-      background: #fff5f8;
+    .btn-party:hover {
+      transform: scale(1.08) rotate(-2deg);
+      background: #ffffff;
     }
 
     /* Contador Regresivo */
     .countdown-box {
-      background: var(--card-bg);
-      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
       padding: 20px;
       text-align: center;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-      border: 2px dashed var(--border);
+      border: 2px dashed rgba(255, 222, 0, 0.5);
     }
 
     .countdown-title {
-      font-size: 14px;
+      font-size: 16px;
       font-weight: bold;
-      color: #777;
+      color: #ffde00;
       text-transform: uppercase;
       letter-spacing: 1px;
       margin-bottom: 12px;
@@ -112,24 +147,45 @@
     }
 
     .timer-segment {
-      background: #fff0f3;
-      padding: 10px 15px;
-      border-radius: 12px;
-      min-width: 65px;
+      background: rgba(0, 0, 0, 0.3);
+      padding: 12px 18px;
+      border-radius: 16px;
+      min-width: 70px;
+      border: 1px solid rgba(255,255,255,0.1);
     }
 
     .timer-number {
-      font-size: 24px;
+      font-size: 28px;
       font-weight: bold;
-      color: var(--primary);
+      color: #ffffff;
     }
 
     .timer-label {
-      font-size: 11px;
-      color: #666;
+      font-size: 12px;
+      color: #ff758c;
     }
 
-    /* Layout Grid */
+    /* Ruleta / Sorpresa de Regalos */
+    .roulette-box {
+      background: linear-gradient(135deg, #3a0ca3 0%, #4361ee 100%);
+      border-radius: 20px;
+      padding: 20px;
+      text-align: center;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .roulette-result {
+      font-size: 20px;
+      font-weight: bold;
+      color: #ffde00;
+      min-height: 30px;
+    }
+
+    /* Layout Dynamic */
     .layout {
       display: grid;
       grid-template-columns: 1fr;
@@ -143,23 +199,24 @@
     }
 
     .panel {
-      background: var(--card-bg);
+      background: rgba(255, 255, 255, 0.95);
+      color: var(--text);
       padding: 25px;
-      border-radius: 16px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+      border-radius: 20px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.3);
       display: flex;
       flex-direction: column;
       gap: 18px;
     }
 
     .panel h2 {
-      font-size: 20px;
-      color: var(--primary);
-      border-bottom: 2px solid var(--border);
+      font-size: 22px;
+      color: var(--purple);
+      border-bottom: 3px solid #ffccd5;
       padding-bottom: 8px;
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 10px;
     }
 
     .form-group {
@@ -176,45 +233,37 @@
 
     input[type="text"], input[type="password"], textarea, select {
       width: 100%;
-      padding: 10px 12px;
-      border: 1.5px solid var(--border);
-      border-radius: 8px;
+      padding: 12px;
+      border: 2px solid #e0aaff;
+      border-radius: 12px;
       font-size: 14px;
       outline: none;
-      transition: border-color 0.2s;
+      transition: all 0.2s;
     }
 
     input:focus, textarea:focus, select:focus {
-      border-color: var(--primary);
+      border-color: var(--pink);
+      box-shadow: 0 0 8px rgba(255, 71, 126, 0.3);
     }
 
     .btn-submit {
-      background-color: var(--primary);
+      background: linear-gradient(135deg, #f72585 0%, #7209b7 100%);
       color: white;
       border: none;
-      padding: 12px;
-      border-radius: 8px;
+      padding: 14px;
+      border-radius: 12px;
       font-size: 16px;
       font-weight: bold;
       cursor: pointer;
-      transition: background 0.2s;
+      box-shadow: 0 5px 15px rgba(114, 9, 183, 0.3);
+      transition: transform 0.2s;
     }
 
     .btn-submit:hover {
-      background-color: var(--primary-hover);
+      transform: scale(1.02);
     }
 
-    .btn-cancel {
-      background-color: #6c757d;
-      color: white;
-      border: none;
-      padding: 8px;
-      border-radius: 8px;
-      font-size: 14px;
-      cursor: pointer;
-      margin-top: -8px;
-    }
-
+    /* Muro de Tarjetas Festivas */
     .cards-container {
       display: flex;
       flex-direction: column;
@@ -224,112 +273,108 @@
       padding-right: 5px;
     }
 
-    .wish-card {
-      background: #fff;
-      border: 1px solid var(--border);
-      border-left: 5px solid var(--primary);
-      border-radius: 10px;
-      padding: 15px;
+    .festive-card {
+      background: #fff0f5;
+      border: 2px solid #ffb3c1;
+      border-radius: 16px;
+      padding: 18px;
       display: flex;
       flex-direction: column;
-      gap: 8px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+      gap: 10px;
+      position: relative;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+      transition: transform 0.2s;
     }
 
-    .wish-card-header {
+    .festive-card:hover {
+      transform: translateY(-3px) rotate(0.5deg);
+    }
+
+    .card-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
     }
 
-    .wish-card-name {
+    .badge-tag {
+      background: var(--purple);
+      color: white;
+      font-size: 12px;
+      padding: 4px 10px;
+      border-radius: 20px;
       font-weight: bold;
+    }
+
+    .card-author {
+      font-weight: bold;
+      font-size: 16px;
+      color: #7209b7;
+    }
+
+    .card-body {
       font-size: 15px;
-      color: var(--primary);
+      color: #333;
+      line-height: 1.4;
+      white-space: pre-line;
+      background: white;
+      padding: 12px;
+      border-radius: 10px;
+      border: 1px dashed #ffb3c1;
     }
 
-    .wish-card-date {
-      font-size: 11px;
-      color: #aaa;
-    }
-
-    .detail-item {
-      font-size: 13px;
-      color: #555;
-    }
-
-    .card-actions {
+    .card-footer {
       display: flex;
-      gap: 8px;
-      margin-top: 6px;
-      border-top: 1px dashed #eee;
-      padding-top: 6px;
-      justify-content: flex-end;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+      color: #888;
     }
 
     .btn-action {
       background: none;
-      border: 1px solid #ddd;
-      padding: 4px 8px;
-      border-radius: 6px;
-      font-size: 12px;
+      border: none;
+      color: #888;
       cursor: pointer;
+      font-size: 13px;
+      padding: 4px 8px;
     }
 
-    .btn-action.edit:hover { background: #e2eafc; color: #0077b6; }
-    .btn-action.delete:hover { background: #ffe5ec; color: var(--primary); }
+    .btn-action:hover {
+      color: var(--pink);
+    }
 
     .empty-state {
       text-align: center;
       color: #888;
-      font-size: 14px;
-      padding: 25px 0;
-    }
-
-    /* Ideas de Regalos */
-    .ideas-box {
-      background: #fff9fa;
-      border: 1.5px solid var(--border);
-      border-radius: 12px;
-      padding: 15px;
-    }
-
-    .ideas-title {
-      font-weight: bold;
-      font-size: 14px;
-      color: var(--primary);
-      margin-bottom: 8px;
-    }
-
-    .ideas-list {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-    }
-
-    .idea-badge {
-      background: #ffffff;
-      border: 1px solid var(--border);
-      padding: 4px 10px;
-      border-radius: 15px;
-      font-size: 12px;
-      color: #555;
+      padding: 30px 0;
+      font-size: 15px;
     }
   </style>
 </head>
 <body>
 
+<!-- Globos Flotantes de Fondo -->
+<div class="balloon" style="left: 10%; width: 40px; height: 50px; background: #f72585; animation-delay: 0s;"></div>
+<div class="balloon" style="left: 30%; width: 50px; height: 60px; background: #7209b7; animation-delay: 3s;"></div>
+<div class="balloon" style="left: 60%; width: 35px; height: 45px; background: #ffde00; animation-delay: 6s;"></div>
+<div class="balloon" style="left: 85%; width: 45px; height: 55px; background: #4cc9f0; animation-delay: 2s;"></div>
+
 <div class="container">
-  <!-- Header con Lanzador de Confeti -->
+
+  <!-- Header Festivo -->
   <header>
-    <h1>🎉 ¡Celebrando a Alexa Gualdrón! 🎂</h1>
-    <p>Pizarra especial de Cumpleaños & Wishlist • 26 de Noviembre</p>
-    <button class="btn-confetti" onclick="lanzarConfeti()">🎊 ¡Lanzar Confeti!</button>
+    <h1>🎉 FIESTA DIGITAL DE ALEXA 🎂</h1>
+    <p>¡Celebremos el Cumpleaños de Alexa Gualdrón el 26 de Noviembre!</p>
+    
+    <div class="header-actions">
+      <button class="btn-party" onclick="lanzarConfeti()"><i class="fa-solid fa-gift"></i> ¡Lanzar Confeti!</button>
+      <button class="btn-party" style="background: #4cc9f0; color: #000;" onclick="toggleMusica()"><i class="fa-solid fa-music"></i> <span id="musicText">Música de Fiesta</span></button>
+    </div>
   </header>
 
   <!-- Contador Regresivo -->
   <div class="countdown-box">
-    <div class="countdown-title">⏳ Cuenta Regresiva para su Cumpleaños</div>
+    <div class="countdown-title">⏳ Falta poco para el gran día</div>
     <div class="timer-grid">
       <div class="timer-segment">
         <div class="timer-number" id="days">00</div>
@@ -350,18 +395,26 @@
     </div>
   </div>
 
+  <!-- Ruleta Interactiva de Regalos -->
+  <div class="roulette-box">
+    <div style="font-size: 16px; font-weight: bold; color: #fff;">🎲 ¿Buscando qué regalarle? ¡Gira la Caja de Ideas!</div>
+    <div class="roulette-result" id="ideaResult">👇 Presiona el botón para descubrir ideas</div>
+    <button class="btn-party" style="font-size: 14px; padding: 8px 18px;" onclick="girarIdeas()">🎰 Obtener Idea de Regalo</button>
+  </div>
+
   <div class="layout">
-    <!-- Panel 1: Escribir Mensaje / Sugerir Deseo -->
+    <!-- Formulario tipo Tarjeta -->
     <div class="panel">
-      <h2 id="formTitle">✍️ Escribir a Alexa</h2>
+      <h2><i class="fa-solid fa-pen-to-square"></i> Dejar una Tarjeta</h2>
       
       <input type="hidden" id="editKey" value="">
 
       <div class="form-group">
-        <label for="tipo">¿Qué vas a publicar?</label>
+        <label for="tipo">Tipo de Publicación</label>
         <select id="tipo">
-          <option value="💌 Mensaje de Cumpleaños">💌 Mensaje / Felicitación</option>
-          <option value="🎁 Sugerencia de Regalo">🎁 Idea de Regalo / Talla / Gusto</option>
+          <option value="💌 Mensaje Especial">💌 Mensaje / Felicitación</option>
+          <option value="🎁 Idea de Regalo">🎁 Sugerencia de Regalo / Gusto</option>
+          <option value="🍕 Lluvia de Sobres / Fiesta">🍕 Aporte para la Fiesta / Torta</option>
         </select>
       </div>
 
@@ -371,50 +424,39 @@
       </div>
 
       <div class="form-group">
-        <label for="contenido">Mensaje o Detalle del Regalo *</label>
-        <textarea id="contenido" rows="4" placeholder="Ej: ¡Feliz cumple Alexa! Que la pases súper bien..." required></textarea>
+        <label for="contenido">Tu mensaje o detalle *</label>
+        <textarea id="contenido" rows="4" placeholder="¡Escribe tus deseos de cumple o detalles de regalo aquí!..." required></textarea>
       </div>
 
       <div class="form-group">
-        <label for="links">🔗 Link sugerido o de tienda (Opcional):</label>
-        <input type="text" id="links" placeholder="Ej: https://instagram.com/o_tienda">
+        <label for="links">🔗 Link de referencia / tienda (Opcional)</label>
+        <input type="text" id="links" placeholder="Ej: instagram.com/tienda">
       </div>
 
       <div class="form-group">
-        <label for="pin">🔒 PIN de 4 dígitos (para editar/borrar tu tarjeta) *</label>
-        <input type="password" id="pin" maxlength="4" placeholder="Ej: 1234" required>
+        <label for="pin">🔒 PIN de 4 dígitos (para editar después) *</label>
+        <input type="password" id="pin" maxlength="4" placeholder="1234" required>
       </div>
 
-      <button class="btn-submit" id="btnSubmit" onclick="guardarPublicacion()">📌 Publicar en la Pizarra</button>
-      <button class="btn-cancel" id="btnCancel" style="display:none;" onclick="cancelarEdicion()">Cancelar Edición</button>
-
-      <!-- Cuadro de Inspiración para Regalos -->
-      <div class="ideas-box">
-        <div class="ideas-title">💡 ¿No sabes qué regalarle? Ideas populares:</div>
-        <div class="ideas-list">
-          <span class="idea-badge">🧴 Perfumes / Cremas</span>
-          <span class="idea-badge">💄 Maquillaje / Skincare</span>
-          <span class="idea-badge">👗 Bono de Ropa</span>
-          <span class="idea-badge">🎧 Audífonos / Accesorios</span>
-          <span class="idea-badge">🍫 Chocolates / Dulces</span>
-          <span class="idea-badge">☕ Taza / Termo personalizado</span>
-        </div>
-      </div>
+      <button class="btn-submit" id="btnSubmit" onclick="guardarTarjetas()"><i class="fa-solid fa-paper-plane"></i> Enviar Tarjeta Digital</button>
     </div>
 
-    <!-- Panel 2: Muro y Pizarra -->
+    <!-- Muro de Tarjetas -->
     <div class="panel">
-      <h2>📋 Muro de Cumpleaños</h2>
+      <h2><i class="fa-solid fa-envelope-open-text"></i> Muro de Felicitaciones</h2>
       
       <div class="cards-container" id="cardsContainer">
-        <div class="empty-state">Cargando los mensajes de cumpleaños...</div>
+        <div class="empty-state">Cargando las sorpresas... 🎈</div>
       </div>
     </div>
   </div>
 </div>
 
+<!-- Audio de fondo festivo opcional -->
+<audio id="bgMusic" loop src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"></audio>
+
 <script>
-  // ⚙️ Configuración de Firebase
+  // Firebase Config
   const firebaseConfig = {
     apiKey: "AIzaSyDDIydBQIA2r9aEYQr3hKvpPEB1p8kueTc",
     authDomain: "amor-y-amistad-25dfa.firebaseapp.com",
@@ -428,17 +470,16 @@
 
   firebase.initializeApp(firebaseConfig);
   const database = firebase.database();
-  const wishlistsRef = database.ref('cumple_alexa');
+  const partyRef = database.ref('fiesta_alexa');
 
   let publicaciones = {};
 
-  // Escuchar publicaciones en tiempo real
-  wishlistsRef.on('value', (snapshot) => {
+  partyRef.on('value', (snapshot) => {
     publicaciones = snapshot.val() || {};
-    renderizarTarjetas(publicaciones);
+    renderizarMuro(publicaciones);
   });
 
-  function guardarPublicacion() {
+  function guardarTarjetas() {
     const editKey = document.getElementById('editKey').value;
     const tipo = document.getElementById('tipo').value;
     const nombre = document.getElementById('nombre').value.trim();
@@ -446,13 +487,8 @@
     const links = document.getElementById('links').value.trim();
     const pin = document.getElementById('pin').value.trim();
 
-    if (!nombre || !contenido) {
-      alert("Por favor completa tu nombre y el contenido del mensaje.");
-      return;
-    }
-
-    if (!pin || pin.length < 4) {
-      alert("Por favor ingresa un PIN de 4 dígitos.");
+    if (!nombre || !contenido || !pin) {
+      alert("Por favor completa tu nombre, mensaje y PIN de 4 dígitos.");
       return;
     }
 
@@ -466,56 +502,50 @@
     };
 
     if (editKey) {
-      wishlistsRef.child(editKey).update(datos, (err) => {
-        if (!err) {
-          alert("¡Publicación actualizada!");
-          limpiarFormulario();
-        }
+      partyRef.child(editKey).update(datos, () => {
+        alert("¡Tarjeta actualizada!");
+        limpiarForm();
       });
     } else {
-      wishlistsRef.push(datos, (err) => {
-        if (!err) {
-          lanzarConfeti();
-          alert("¡Publicado en el muro de Alexa!");
-          limpiarFormulario();
-        }
+      partyRef.push(datos, () => {
+        lanzarConfeti();
+        alert("¡Tu tarjeta fue publicada en la fiesta!");
+        limpiarForm();
       });
     }
   }
 
-  function renderizarTarjetas(datos) {
+  function renderizarMuro(datos) {
     const container = document.getElementById('cardsContainer');
     container.innerHTML = '';
 
     const keys = Object.keys(datos).reverse();
 
     if (keys.length === 0) {
-      container.innerHTML = '<div class="empty-state">Aún no hay mensajes. ¡Sé el primero en felicitar a Alexa! 🎂</div>';
+      container.innerHTML = '<div class="empty-state">¡Aún no hay tarjetas! Sé el primero en dejarle una felicitación a Alexa 🎈</div>';
       return;
     }
 
     keys.forEach(key => {
       const item = datos[key];
       const card = document.createElement('div');
-      card.className = 'wish-card';
+      card.className = 'festive-card';
 
-      let linkHTML = '';
-      if (item.links) {
-        let url = item.links.trim();
-        if (!url.startsWith('http')) url = 'https://' + url;
-        linkHTML = `<div class="detail-item"><a href="${url}" target="_blank" style="color: var(--primary);">🔗 Ver enlace sugerido</a></div>`;
-      }
+      let linkHTML = item.links ? `<a href="${item.links.startsWith('http') ? item.links : 'https://' + item.links}" target="_blank" style="color: #7209b7; font-weight: bold; font-size: 13px;">🔗 Ver enlace sugerido</a>` : '';
 
       card.innerHTML = `
-        <div class="wish-card-header">
-          <span class="wish-card-name">${item.tipo || '💌 Mensaje'} - De: ${item.nombre}</span>
-          <span class="wish-card-date">${item.fecha}</span>
+        <div class="card-header">
+          <span class="card-author"><i class="fa-solid fa-user-tag"></i> ${item.nombre}</span>
+          <span class="badge-tag">${item.tipo}</span>
         </div>
-        <div class="detail-item" style="font-size: 14px; color: #333; white-space: pre-line;">${item.contenido}</div>
+        <div class="card-body">${item.contenido}</div>
         ${linkHTML}
-        <div class="card-actions">
-          <button class="btn-action edit" onclick="solicitarEditar('${key}')">✏️ Editar</button>
-          <button class="btn-action delete" onclick="solicitarEliminar('${key}')">🗑️ Borrar</button>
+        <div class="card-footer">
+          <span>📅 ${item.fecha}</span>
+          <div>
+            <button class="btn-action" onclick="solicitarEditar('${key}')"><i class="fa-solid fa-pen"></i> Editar</button>
+            <button class="btn-action" onclick="solicitarEliminar('${key}')"><i class="fa-solid fa-trash"></i> Borrar</button>
+          </div>
         </div>
       `;
 
@@ -525,84 +555,99 @@
 
   function solicitarEditar(key) {
     const item = publicaciones[key];
-    if (!item) return;
-
-    const pinIngresado = prompt(`Ingresa tu PIN de 4 dígitos para editar la tarjeta:`);
+    const pinIngresado = prompt("Ingresa tu PIN de 4 dígitos:");
     if (pinIngresado === item.pin) {
       document.getElementById('editKey').value = key;
-      document.getElementById('tipo').value = item.tipo || '💌 Mensaje de Cumpleaños';
+      document.getElementById('tipo').value = item.tipo;
       document.getElementById('nombre').value = item.nombre;
       document.getElementById('contenido').value = item.contenido;
       document.getElementById('links').value = item.links || '';
       document.getElementById('pin').value = item.pin;
-
-      document.getElementById('formTitle').innerText = "✏️ Editar Publicación";
-      document.getElementById('btnSubmit').innerText = "💾 Guardar Cambios";
-      document.getElementById('btnCancel').style.display = "block";
+      document.getElementById('btnSubmit').innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Guardar Cambios';
     } else if (pinIngresado !== null) {
-      alert("❌ PIN incorrecto.");
+      alert("❌ PIN incorrecto");
     }
   }
 
   function solicitarEliminar(key) {
     const item = publicaciones[key];
-    if (!item) return;
-
-    const pinIngresado = prompt(`Ingresa tu PIN de 4 dígitos para eliminar la tarjeta:`);
+    const pinIngresado = prompt("Ingresa tu PIN de 4 dígitos para borrar:");
     if (pinIngresado === item.pin) {
-      if (confirm("¿Estás seguro de borrar este mensaje?")) {
-        wishlistsRef.child(key).remove();
-      }
+      partyRef.child(key).remove();
     } else if (pinIngresado !== null) {
-      alert("❌ PIN incorrecto.");
+      alert("❌ PIN incorrecto");
     }
   }
 
-  function limpiarFormulario() {
+  function limpiarForm() {
     document.getElementById('editKey').value = '';
     document.getElementById('nombre').value = '';
     document.getElementById('contenido').value = '';
     document.getElementById('links').value = '';
     document.getElementById('pin').value = '';
-
-    document.getElementById('formTitle').innerText = "✍️ Escribir a Alexa";
-    document.getElementById('btnSubmit').innerText = "📌 Publicar en la Pizarra";
-    document.getElementById('btnCancel').style.display = "none";
-  }
-
-  function cancelarEdicion() {
-    limpiarFormulario();
+    document.getElementById('btnSubmit').innerHTML = '<i class="fa-solid fa-paper-plane"></i> Enviar Tarjeta Digital';
   }
 
   function lanzarConfeti() {
-    confetti({
-      particleCount: 100,
-      spread: 70,
-      origin: { y: 0.6 }
-    });
+    confetti({ particleCount: 120, spread: 80, origin: { y: 0.6 } });
   }
 
-  // Lógica del Contador Regresivo
+  // Ruleta de ideas
+  const ideas = [
+    "🧴 Perfume dulce / Loción corporal",
+    "💄 Kit de Skincare / Cuidado facial",
+    "👗 Bono de regalo para tienda de ropa",
+    "🎧 Audífonos inalámbricos",
+    "☕ Taza térmica bonita para oficina",
+    "🍫 Chocolates de regalo especiales",
+    "⌚ Accesorio / Pulsera fina",
+    "🍕 Lluvia de sobres / Aporte para la fiesta"
+  ];
+
+  function girarIdeas() {
+    let index = 0;
+    const interval = setInterval(() => {
+      document.getElementById('ideaResult').innerText = ideas[index];
+      index = (index + 1) % ideas.length;
+    }, 80);
+
+    setTimeout(() => {
+      clearInterval(interval);
+      const finalIdea = ideas[Math.floor(Math.random() * ideas.length)];
+      document.getElementById('ideaResult').innerText = "💡 Idea sugerida: " + finalIdea;
+      lanzarConfeti();
+    }, 1500);
+  }
+
+  // Música
+  let reproduciendo = false;
+  function toggleMusica() {
+    const audio = document.getElementById('bgMusic');
+    if (reproduciendo) {
+      audio.pause();
+      document.getElementById('musicText').innerText = "Música de Fiesta";
+    } else {
+      audio.play();
+      document.getElementById('musicText').innerText = "Pausar Música 🎵";
+    }
+    reproduciendo = !reproduciendo;
+  }
+
+  // Contador
   function actualizarContador() {
     const ahora = new Date();
     let anoActual = ahora.getFullYear();
-    let fechaCumple = new Date(anoActual, 10, 26); // Mes 10 = Noviembre (0-indexed)
+    let fechaCumple = new Date(anoActual, 10, 26);
 
     if (ahora > fechaCumple) {
       fechaCumple = new Date(anoActual + 1, 10, 26);
     }
 
-    const diferencia = fechaCumple - ahora;
-
-    const d = Math.floor(diferencia / (1000 * 60 * 60 * 24));
-    const h = Math.floor((diferencia % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-    const m = Math.floor((diferencia % (1000 * 60 * 60)) / (1000 * 60));
-    const s = Math.floor((diferencia % (1000 * 60)) / 1000);
-
-    document.getElementById('days').innerText = d < 10 ? '0' + d : d;
-    document.getElementById('hours').innerText = h < 10 ? '0' + h : h;
-    document.getElementById('minutes').innerText = m < 10 ? '0' + m : m;
-    document.getElementById('seconds').innerText = s < 10 ? '0' + s : s;
+    const diff = fechaCumple - ahora;
+    document.getElementById('days').innerText = String(Math.floor(diff / (1000 * 60 * 60 * 24))).padStart(2, '0');
+    document.getElementById('hours').innerText = String(Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))).padStart(2, '0');
+    document.getElementById('minutes').innerText = String(Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60))).padStart(2, '0');
+    document.getElementById('seconds').innerText = String(Math.floor((diff % (1000 * 60)) / 1000)).padStart(2, '0');
   }
 
   setInterval(actualizarContador, 1000);
