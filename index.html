@@ -44,6 +44,18 @@
       position: relative;
     }
 
+    /* EFECTO MODO PARRANDA / PISTA DE BAILE (LUCES DE MINITECA) */
+    body.modo-parranda {
+      animation: discoBg 0.8s infinite alternate ease-in-out;
+    }
+
+    @keyframes discoBg {
+      0% { background: linear-gradient(135deg, #7209b7 0%, #f72585 50%, #3c096c 100%); }
+      33% { background: linear-gradient(135deg, #ff0054 0%, #3a0ca3 50%, #4cc9f0 100%); }
+      66% { background: linear-gradient(135deg, #ffb703 0%, #7209b7 50%, #ff477e 100%); }
+      100% { background: linear-gradient(135deg, #38b000 0%, #10002b 50%, #f72585 100%); }
+    }
+
     /* Globos animados de fondo */
     .balloon {
       position: fixed;
@@ -108,7 +120,7 @@
       border: none;
       padding: 12px 24px;
       border-radius: 30px;
-      font-size: 16px;
+      font-size: 15px;
       font-weight: bold;
       cursor: pointer;
       box-shadow: 0 5px 15px rgba(255, 222, 0, 0.4);
@@ -122,6 +134,33 @@
     .btn-party:hover {
       transform: scale(1.08) rotate(-2deg);
       background: #ffffff;
+    }
+
+    .btn-party.active-disco {
+      background: #ff0054;
+      color: #ffffff;
+      animation: pulseBtn 0.5s infinite alternate;
+    }
+
+    @keyframes pulseBtn {
+      0% { transform: scale(1); }
+      100% { transform: scale(1.08); box-shadow: 0 0 20px #ff0054; }
+    }
+
+    /* Contador Global de Tragos */
+    .tragos-counter-badge {
+      background: rgba(0, 0, 0, 0.4);
+      border: 2px solid #ffde00;
+      color: #ffde00;
+      padding: 8px 18px;
+      border-radius: 20px;
+      font-weight: 800;
+      font-size: 15px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 10px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
     }
 
     /* Reproductor de Video MP4 local */
@@ -186,7 +225,7 @@
       color: #ff758c;
     }
 
-    /* === SECCIÓN PASTEL DE DISEÑO MEJORADO === */
+    /* === SECCIÓN PASTEL DE DISEÑO === */
     .cake-section {
       background: rgba(255, 255, 255, 0.08);
       backdrop-filter: blur(12px);
@@ -216,7 +255,6 @@
       margin: 0 auto 10px auto;
     }
 
-    /* Fila de Velas y Letreros de Nombre */
     .candles-row {
       display: flex;
       justify-content: center;
@@ -235,7 +273,6 @@
       position: relative;
     }
 
-    /* Vela Visual */
     .candle {
       position: relative;
       width: 16px;
@@ -245,7 +282,6 @@
       z-index: 2;
     }
 
-    /* Mecha */
     .candle::before {
       content: '';
       position: absolute;
@@ -257,7 +293,6 @@
       background: #111;
     }
 
-    /* Llama brillante */
     .flame {
       position: absolute;
       top: -26px;
@@ -278,7 +313,6 @@
       100% { transform: translateX(-50%) scale(1.08) rotate(3deg); }
     }
 
-    /* Etiqueta del Nombre Debajo de la Vela */
     .candle-name-tag {
       background: #ffffff;
       color: #2b0054;
@@ -305,14 +339,12 @@
       border-bottom: 5px solid #ffde00;
     }
 
-    /* Colores de Velas */
     .candle-c0 { background: repeating-linear-gradient(45deg, #ff477e, #ff477e 7px, #ffffff 7px, #ffffff 14px); }
     .candle-c1 { background: repeating-linear-gradient(-45deg, #00b4d8, #00b4d8 7px, #ffffff 7px, #ffffff 14px); }
     .candle-c2 { background: repeating-linear-gradient(45deg, #ffb703, #ffb703 7px, #ffffff 7px, #ffffff 14px); }
     .candle-c3 { background: repeating-linear-gradient(-45deg, #7209b7, #7209b7 7px, #ffffff 7px, #ffffff 14px); }
     .candle-c4 { background: repeating-linear-gradient(45deg, #38b000, #38b000 7px, #ffffff 7px, #ffffff 14px); }
 
-    /* Estructura de Torta */
     .cake-body {
       display: flex;
       flex-direction: column;
@@ -442,6 +474,32 @@
       box-shadow: 0 0 8px rgba(255, 71, 126, 0.3);
     }
 
+    /* FOTOMATÓN: MARCOS FOTOGRÁFICOS */
+    .marco-selector {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 5px;
+    }
+
+    .marco-option {
+      background: #f0e6ff;
+      border: 2px solid #7209b7;
+      padding: 6px 12px;
+      border-radius: 12px;
+      font-size: 13px;
+      font-weight: bold;
+      cursor: pointer;
+      color: #7209b7;
+      transition: all 0.2s;
+    }
+
+    .marco-option.selected {
+      background: #7209b7;
+      color: #ffffff;
+      border-color: #ffde00;
+    }
+
     .btn-submit {
       background: linear-gradient(135deg, #f72585 0%, #7209b7 100%);
       color: white;
@@ -518,13 +576,74 @@
       border: 1px dashed #ffb3c1;
     }
 
+    /* CONTENEDOR FOTO CON MARCO PARRANDERO */
+    .photo-frame-wrapper {
+      position: relative;
+      border-radius: 12px;
+      overflow: hidden;
+      margin-top: 5px;
+    }
+
     .card-photo {
       width: 100%;
       max-height: 280px;
       object-fit: cover;
       border-radius: 12px;
-      border: 2px solid #ffb3c1;
-      margin-top: 5px;
+      display: block;
+    }
+
+    .photo-frame-wrapper.marco-vueltiao {
+      border: 8px solid #000;
+      box-shadow: inset 0 0 0 3px #ffde00;
+    }
+
+    .photo-frame-wrapper.marco-vueltiao::after {
+      content: '🤠 Sombrero Vueltiao';
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      background: #000;
+      color: #ffde00;
+      font-size: 11px;
+      font-weight: bold;
+      padding: 3px 8px;
+      border-radius: 10px;
+    }
+
+    .photo-frame-wrapper.marco-fiesta {
+      border: 8px solid #f72585;
+      box-shadow: inset 0 0 0 3px #ffde00;
+    }
+
+    .photo-frame-wrapper.marco-fiesta::after {
+      content: '🕶️ Party Mode';
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      background: #f72585;
+      color: #fff;
+      font-size: 11px;
+      font-weight: bold;
+      padding: 3px 8px;
+      border-radius: 10px;
+    }
+
+    .photo-frame-wrapper.marco-serpentina {
+      border: 8px solid #38b000;
+      box-shadow: inset 0 0 0 3px #7209b7;
+    }
+
+    .photo-frame-wrapper.marco-serpentina::after {
+      content: '🎉 Carnavalesco';
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      background: #38b000;
+      color: #fff;
+      font-size: 11px;
+      font-weight: bold;
+      padding: 3px 8px;
+      border-radius: 10px;
     }
 
     .card-footer {
@@ -555,7 +674,70 @@
       font-size: 15px;
     }
 
-    /* === MODAL PARRANDERO DIOMEDES ("Ayy, sirvalo compaeee!") === */
+    /* === SECCIÓN DE TRIVIA DE ALEXA === */
+    .trivia-box {
+      background: linear-gradient(135deg, #3c096c 0%, #240046 100%);
+      border: 2px solid #ffde00;
+      border-radius: 20px;
+      padding: 22px;
+      margin-top: 10px;
+      color: #fff;
+    }
+
+    .trivia-question {
+      font-size: 17px;
+      font-weight: 700;
+      color: #ffde00;
+      margin-bottom: 14px;
+    }
+
+    .trivia-options {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .trivia-btn {
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.3);
+      color: #fff;
+      padding: 12px 16px;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      text-align: left;
+      transition: all 0.2s;
+    }
+
+    .trivia-btn:hover {
+      background: rgba(255, 222, 0, 0.3);
+      border-color: #ffde00;
+    }
+
+    .trivia-result {
+      margin-top: 15px;
+      font-size: 16px;
+      font-weight: bold;
+      text-align: center;
+      padding: 10px;
+      border-radius: 12px;
+      display: none;
+    }
+
+    .trivia-result.correct {
+      background: #38b000;
+      color: #fff;
+      display: block;
+    }
+
+    .trivia-result.wrong {
+      background: #d90429;
+      color: #fff;
+      display: block;
+    }
+
+    /* MODAL PARRANDERO DIOMEDES */
     .modal-overlay {
       position: fixed;
       top: 0;
@@ -619,7 +801,6 @@
       margin-bottom: 25px;
     }
 
-    /* Grid de Botellas de Licor */
     .liquor-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
@@ -688,7 +869,6 @@
       transform: scale(1.05);
     }
 
-    /* Toast Flotante de Salud */
     .toast-salud {
       position: fixed;
       bottom: 30px;
@@ -717,10 +897,10 @@
 </head>
 <body>
 
-<!-- Audio local (cumple.mp3) -->
+<!-- Audio local -->
 <audio id="audioDiomedes" loop src="cumple.mp3"></audio>
 
-<!-- Globos Flotantes de Fondo -->
+<!-- Globos Flotantes -->
 <div class="balloon" style="left: 10%; width: 40px; height: 50px; background: #f72585; animation-delay: 0s;"></div>
 <div class="balloon" style="left: 30%; width: 50px; height: 60px; background: #7209b7; animation-delay: 3s;"></div>
 <div class="balloon" style="left: 60%; width: 35px; height: 45px; background: #ffde00; animation-delay: 6s;"></div>
@@ -733,9 +913,16 @@
     <h1>🎉 FIESTA DIGITAL DE ALEXA 🎂</h1>
     <p>¡Celebremos el Cumpleaños de Alexa Gualdrón el 26 de Noviembre!</p>
     
+    <!-- Contador Global de Tragos Servidos -->
+    <div class="tragos-counter-badge" id="globalTragosBadge">
+      🥃 <span id="totalTragosCount">0</span> Tragos Servidos en la Parranda
+    </div>
+
     <div class="header-actions">
       <button class="btn-party" onclick="lanzarConfeti()"><i class="fa-solid fa-gift"></i> ¡Lanzar Confeti!</button>
       <button class="btn-party" onclick="toggleDiomedes()"><i class="fa-solid fa-music"></i> <span id="musicText">Escuchar Diomedes Díaz 🪗</span></button>
+      <!-- Botón Pista de Baile / Modo Parranda -->
+      <button class="btn-party" id="btnModoParranda" onclick="toggleModoParranda()"><i class="fa-solid fa-bolt"></i> <span id="parrandaText">¡Activar Modo Parranda 🪩!</span></button>
     </div>
 
     <!-- Reproductor de Video MP4 local -->
@@ -770,17 +957,13 @@
     </div>
   </div>
 
-  <!-- Pastel de Cumpleaños Interactivo Rediseñado -->
+  <!-- Pastel de Cumpleaños Interactivo -->
   <div class="cake-section">
     <div class="cake-title" id="cakeCounterText">🎂 Torta de Cumpleaños de Alexa (0 Velitas Encendidas)</div>
     
     <div class="cake-wrapper">
-      <!-- Fila de Velas con Etiquetas de Nombre Legibles -->
-      <div class="candles-row" id="candlesRow">
-        <!-- Generación dinámica de velas y nombres -->
-      </div>
+      <div class="candles-row" id="candlesRow"></div>
 
-      <!-- Torta Ilustrada -->
       <div class="cake-body">
         <div class="cake-layer-top">
           <div class="frosting-drips"></div>
@@ -794,17 +977,19 @@
   </div>
 
   <div class="layout">
-    <!-- Formulario tipo Tarjeta -->
+    <!-- Formulario tipo Tarjeta + Fotomatón y Coplas -->
     <div class="panel">
-      <h2><i class="fa-solid fa-pen-to-square"></i> Encender una Velita & Dejar Mensaje</h2>
+      <h2><i class="fa-solid fa-pen-to-square"></i> Encender Velita & Dejar Mensaje</h2>
       
       <input type="hidden" id="editKey" value="">
       <input type="hidden" id="fotoBase64Existente" value="">
+      <input type="hidden" id="marcoSeleccionado" value="ninguno">
 
       <div class="form-group">
         <label for="tipo">Categoría de la Nota</label>
         <select id="tipo">
           <option value="💌 Mensaje Especial">💌 Mensaje Especial de Cumpleaños</option>
+          <option value="🎤 Copla Vallenata">🎤 Copla / Verso Vallenato</option>
           <option value="📸 Foto / Recuerdo">📸 Foto / Recuerdo Bonito</option>
           <option value="🍕 Aporte Fiesta">🍕 Aporte para la Celebración / Torta</option>
         </select>
@@ -818,11 +1003,26 @@
       <div class="form-group">
         <label for="contenido">Tu mensaje o deseo especial *</label>
         <textarea id="contenido" rows="4" placeholder="¡Escribe tus deseos de cumple o recuerda una anécdota especial con Alexa!..." required></textarea>
+        <!-- Generador de Coplas -->
+        <button type="button" style="background: #e0aaff; border: none; padding: 6px 12px; border-radius: 8px; font-weight: bold; cursor: pointer; color: #3c096c; font-size: 12px; margin-top: 4px; align-self: flex-start;" onclick="generarCoplaAleatoria()">
+          🎲 ¡Generar una Copla Vallenata Automática!
+        </button>
       </div>
 
       <div class="form-group">
-        <label for="fotoInput">🖼️ Adjuntar una Foto / Recuerdo desde tu equipo (Opcional):</label>
+        <label for="fotoInput">🖼️ Adjuntar Foto desde tu equipo (Opcional):</label>
         <input type="file" id="fotoInput" accept="image/*">
+      </div>
+
+      <!-- FOTOMATÓN PARRANDERO -->
+      <div class="form-group">
+        <label>📸 Marco / Adhesivo Parrandero para la Foto:</label>
+        <div class="marco-selector">
+          <button type="button" class="marco-option selected" onclick="seleccionarMarco('ninguno', this)">Sencillo</button>
+          <button type="button" class="marco-option" onclick="seleccionarMarco('marco-vueltiao', this)">🤠 Vueltiao</button>
+          <button type="button" class="marco-option" onclick="seleccionarMarco('marco-fiesta', this)">🕶️ Party</button>
+          <button type="button" class="marco-option" onclick="seleccionarMarco('marco-serpentina', this)">🎉 Carnaval</button>
+        </div>
       </div>
 
       <div class="form-group">
@@ -833,13 +1033,26 @@
       <button class="btn-submit" id="btnSubmit" onclick="guardarTarjetas()"><i class="fa-solid fa-paper-plane"></i> Publicar y Encender Velita 🕯</button>
     </div>
 
-    <!-- Muro y Álbum de Fotos -->
-    <div class="panel">
-      <h2><i class="fa-solid fa-images"></i> Muro de Mensajes y Recuerdos</h2>
+    <!-- Columna Derecha: Muro + Trivia -->
+    <div style="display: flex; flex-direction: column; gap: 25px;">
       
-      <div class="cards-container" id="cardsContainer">
-        <div class="empty-state">Cargando las sorpresas... 🎈</div>
+      <!-- TRIVIA: ¿Qué tanto conoces a Alexa? -->
+      <div class="trivia-box">
+        <div style="font-size: 18px; font-weight: bold; margin-bottom: 8px; color: #ffde00;"><i class="fa-solid fa-circle-question"></i> TRIVIA: ¿Qué tanto conoces a Alexa? 🧠</div>
+        <div class="trivia-question" id="triviaQuestion">Cargando pregunta...</div>
+        <div class="trivia-options" id="triviaOptions"></div>
+        <div class="trivia-result" id="triviaResult"></div>
       </div>
+
+      <!-- Muro y Álbum de Fotos -->
+      <div class="panel">
+        <h2><i class="fa-solid fa-images"></i> Muro de Mensajes y Recuerdos</h2>
+        
+        <div class="cards-container" id="cardsContainer">
+          <div class="empty-state">Cargando las sorpresas... 🎈</div>
+        </div>
+      </div>
+
     </div>
   </div>
 </div>
@@ -912,8 +1125,15 @@
   firebase.initializeApp(firebaseConfig);
   const database = firebase.database();
   const partyRef = database.ref('fiesta_alexa');
+  const tragosRef = database.ref('tragos_count');
 
   let publicaciones = {};
+
+  // Escuchar contador de tragos global
+  tragosRef.on('value', (snapshot) => {
+    const total = snapshot.val() || 0;
+    document.getElementById('totalTragosCount').innerText = total;
+  });
 
   partyRef.on('value', (snapshot) => {
     publicaciones = snapshot.val() || {};
@@ -921,7 +1141,7 @@
     actualizarPastel(publicaciones);
   });
 
-  // Procesar imagen local
+  // Procesar imagen
   function procesarImagen(file, callback) {
     if (!file) {
       callback(null);
@@ -955,12 +1175,35 @@
     reader.readAsDataURL(file);
   }
 
+  // Selección de Marco del Fotomatón
+  function seleccionarMarco(marco, elemento) {
+    document.getElementById('marcoSeleccionado').value = marco;
+    const opciones = document.querySelectorAll('.marco-option');
+    opciones.forEach(btn => btn.classList.remove('selected'));
+    elemento.classList.add('selected');
+  }
+
+  // Generador Aleatorio de Coplas
+  const coplasEjemplos = [
+    "En el cielo hay una estrella, en el mar un tiburón, ¡y hoy todos celebramos el cumple de Alexa Gualdrón! 🪗🎉",
+    "¡Sírvanme un Buchanan's fino, o un traguito de ron, que la dueña de esta fiesta se robó mi corazón! 🥃💖",
+    "Con la caja y el acordeón, la parranda va a empezar, ¡un feliz cumpleaños Alexa, hoy nos vamos a emparrandar! 🎶🎂",
+    "Que los cumpla muy feliz, llena de gozo y alegría, ¡que siga la fiesta buena hasta que nos de el otro día! ☀️🍾"
+  ];
+
+  function generarCoplaAleatoria() {
+    const copla = coplasEjemplos[Math.floor(Math.random() * coplasEjemplos.length)];
+    document.getElementById('contenido').value = copla;
+    document.getElementById('tipo').value = '🎤 Copla Vallenata';
+  }
+
   function guardarTarjetas() {
     const editKey = document.getElementById('editKey').value;
     const tipo = document.getElementById('tipo').value;
     const nombre = document.getElementById('nombre').value.trim();
     const contenido = document.getElementById('contenido').value.trim();
     const pin = document.getElementById('pin').value.trim();
+    const marco = document.getElementById('marcoSeleccionado').value;
     const fileInput = document.getElementById('fotoInput');
     const fotoExistente = document.getElementById('fotoBase64Existente').value;
 
@@ -979,6 +1222,7 @@
         nombre: nombre,
         contenido: contenido,
         foto: fotoFinal,
+        marco: marco,
         pin: pin,
         fecha: new Date().toLocaleDateString()
       };
@@ -1014,7 +1258,12 @@
       const card = document.createElement('div');
       card.className = 'festive-card';
 
-      let fotoHTML = item.foto ? `<img class="card-photo" src="${item.foto}" alt="Foto Recuerdo" onerror="this.style.display='none'">` : '';
+      let marcoClase = item.marco && item.marco !== 'ninguno' ? item.marco : '';
+      let fotoHTML = item.foto ? `
+        <div class="photo-frame-wrapper ${marcoClase}">
+          <img class="card-photo" src="${item.foto}" alt="Foto Recuerdo" onerror="this.style.display='none'">
+        </div>
+      ` : '';
 
       card.innerHTML = `
         <div class="card-header">
@@ -1036,7 +1285,6 @@
     });
   }
 
-  // Generador de Velas + Cartel de Nombre Nítido
   function actualizarPastel(datos) {
     const candlesRow = document.getElementById('candlesRow');
     const cakeCounterText = document.getElementById('cakeCounterText');
@@ -1105,7 +1353,35 @@
     confetti({ particleCount: 120, spread: 80, origin: { y: 0.6 } });
   }
 
-  // Reproducción de Diomedes Díaz MP3 & Modal "Ayy, sirvalo compaeee"
+  // MODO PARRANDA / PISTA DE BAILE
+  let enModoParranda = false;
+  let intervaloConfeti = null;
+
+  function toggleModoParranda() {
+    enModoParranda = !enModoParranda;
+    const body = document.body;
+    const btn = document.getElementById('btnModoParranda');
+    const txt = document.getElementById('parrandaText');
+
+    if (enModoParranda) {
+      body.classList.add('modo-parranda');
+      btn.classList.add('active-disco');
+      txt.innerText = '¡Apagar Luces de Disco! 🕺';
+      
+      // Confeti continuo
+      intervaloConfeti = setInterval(() => {
+        confetti({ particleCount: 30, spread: 60, origin: { x: Math.random(), y: Math.random() - 0.2 } });
+      }, 1500);
+
+    } else {
+      body.classList.remove('modo-parranda');
+      btn.classList.remove('active-disco');
+      txt.innerText = '¡Activar Modo Parranda 🪩!';
+      clearInterval(intervaloConfeti);
+    }
+  }
+
+  // Reproducción Diomedes & Modal "Sírvalo compaeee"
   let reproduciendoAudio = false;
   
   function toggleDiomedes() {
@@ -1134,7 +1410,9 @@
   function brindarConTrago(nombreTrago, icono) {
     lanzarConfeti();
     
-    // Reproducir efecto visual con Toast
+    // Sumar trago en Firebase
+    tragosRef.transaction((current) => (current || 0) + 1);
+
     const toast = document.getElementById('toastSalud');
     toast.innerHTML = `¡Salud, compae! 🥂<br><small>Sírvalo de ${nombreTrago} ${icono}</small>`;
     toast.classList.add('show');
@@ -1143,6 +1421,64 @@
       toast.classList.remove('show');
     }, 3000);
   }
+
+  // TRIVIA INTERACTIVA
+  const preguntasTrivia = [
+    {
+      q: "¿En qué fecha se celebra el cumpleaños de Alexa?",
+      options: ["15 de Agosto", "26 de Noviembre", "31 de Diciembre"],
+      correct: 1
+    },
+    {
+      q: "¿Cuál es el licor preferido para armar la parranda con Alexa?",
+      options: ["Buchanan's helado", "Tequila con sal", "Ron Viejo de Caldas"],
+      correct: 0
+    },
+    {
+      q: "¿Qué canción vallenata no puede faltar en su cumpleaños?",
+      options: ["El Santo Cachón", "Tu Cumpleaños - Diomedes Díaz", "La Gota Fría"],
+      correct: 1
+    }
+  ];
+
+  let triviaIndex = 0;
+
+  function cargarPreguntaTrivia() {
+    const current = preguntasTrivia[triviaIndex];
+    document.getElementById('triviaQuestion').innerText = `${triviaIndex + 1}. ${current.q}`;
+    const optsContainer = document.getElementById('triviaOptions');
+    optsContainer.innerHTML = '';
+    document.getElementById('triviaResult').className = 'trivia-result';
+
+    current.options.forEach((opt, idx) => {
+      const btn = document.createElement('button');
+      btn.className = 'trivia-btn';
+      btn.innerText = opt;
+      btn.onclick = () => verificarRespuestaTrivia(idx);
+      optsContainer.appendChild(btn);
+    });
+  }
+
+  function verificarRespuestaTrivia(index) {
+    const current = preguntasTrivia[triviaIndex];
+    const res = document.getElementById('triviaResult');
+
+    if (index === current.correct) {
+      res.innerText = '🎉 ¡Correcto, compae! ¡Te ganaste la Medalla de Parrandero VIP! 🏅';
+      res.className = 'trivia-result correct';
+      lanzarConfeti();
+
+      setTimeout(() => {
+        triviaIndex = (triviaIndex + 1) % preguntasTrivia.length;
+        cargarPreguntaTrivia();
+      }, 3000);
+    } else {
+      res.innerText = '❌ ¡Nop! Tómate un shot y vuelve a intentarlo. 🥃';
+      res.className = 'trivia-result wrong';
+    }
+  }
+
+  cargarPreguntaTrivia();
 
   // Contador Regresivo
   function actualizarContador() {
@@ -1157,7 +1493,7 @@
     const diff = fechaCumple - ahora;
     document.getElementById('days').innerText = String(Math.floor(diff / (1000 * 60 * 60 * 24))).padStart(2, '0');
     document.getElementById('hours').innerText = String(Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))).padStart(2, '0');
-    document.getElementById('minutes').innerText = String(Math.floor((diff % (1000 * 60)) / (1000 * 60))).padStart(2, '0');
+    document.getElementById('minutes').innerText = String(Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60))).padStart(2, '0');
     document.getElementById('seconds').innerText = String(Math.floor((diff % (1000 * 60)) / 1000)).padStart(2, '0');
   }
 
