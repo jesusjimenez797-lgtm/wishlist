@@ -240,6 +240,14 @@
       transition: all 0.2s;
     }
 
+    input[type="file"] {
+      padding: 8px;
+      border: 2px dashed #e0aaff;
+      border-radius: 12px;
+      background: #fcf8ff;
+      cursor: pointer;
+    }
+
     input:focus, textarea:focus, select:focus {
       border-color: var(--pink);
       box-shadow: 0 0 8px rgba(255, 71, 126, 0.3);
@@ -323,7 +331,7 @@
 
     .card-photo {
       width: 100%;
-      max-height: 250px;
+      max-height: 280px;
       object-fit: cover;
       border-radius: 12px;
       border: 2px solid #ffb3c1;
@@ -415,11 +423,12 @@
   </div>
 
   <div class="layout">
-    <!-- Formulario tipo Tarjeta con opción de foto -->
+    <!-- Formulario tipo Tarjeta con subida directa de archivos -->
     <div class="panel">
       <h2><i class="fa-solid fa-pen-to-square"></i> Dejar un Mensaje / Recuerdo</h2>
       
       <input type="hidden" id="editKey" value="">
+      <input type="hidden" id="fotoBase64Existente" value="">
 
       <div class="form-group">
         <label for="tipo">Categoría de la Nota</label>
@@ -441,8 +450,8 @@
       </div>
 
       <div class="form-group">
-        <label for="foto">🖼️ Link de una Foto / Recuerdo (Opcional)</label>
-        <input type="text" id="foto" placeholder="Pegar URL de la imagen (ej: https://....jpg)">
+        <label for="fotoInput">🖼️ Adjuntar una Foto / Recuerdo desde tu equipo (Opcional):</label>
+        <input type="file" id="fotoInput" accept="image/*">
       </div>
 
       <div class="form-group">
@@ -488,40 +497,83 @@
     renderizarMuro(publicaciones);
   });
 
+  // Función para comprimir/convertir imagen local a formato de texto comprimido
+  function procesarImagen(file, callback) {
+    if (!file) {
+      callback(null);
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      const img = new Image();
+      img.onload = function() {
+        const canvas = document.createElement('canvas');
+        const MAX_WIDTH = 800;
+        let width = img.width;
+        let height = img.height;
+
+        if (width > MAX_WIDTH) {
+          height = Math.round((height * MAX_WIDTH) / width);
+          width = MAX_WIDTH;
+        }
+
+        canvas.width = width;
+        canvas.height = height;
+
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, width, height);
+        
+        // Exportar como JPEG comprimido para optimizar velocidad y espacio
+        const dataUrl = canvas.toDataURL('image/jpeg', 0.7);
+        callback(dataUrl);
+      };
+      img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  }
+
   function guardarTarjetas() {
     const editKey = document.getElementById('editKey').value;
     const tipo = document.getElementById('tipo').value;
     const nombre = document.getElementById('nombre').value.trim();
     const contenido = document.getElementById('contenido').value.trim();
-    const foto = document.getElementById('foto').value.trim();
     const pin = document.getElementById('pin').value.trim();
+    const fileInput = document.getElementById('fotoInput');
+    const fotoExistente = document.getElementById('fotoBase64Existente').value;
 
     if (!nombre || !contenido || !pin) {
       alert("Por favor completa tu nombre, mensaje y PIN de 4 dígitos.");
       return;
     }
 
-    const datos = {
-      tipo: tipo,
-      nombre: nombre,
-      contenido: contenido,
-      foto: foto,
-      pin: pin,
-      fecha: new Date().toLocaleDateString()
-    };
+    const archivoFoto = fileInput.files[0];
 
-    if (editKey) {
-      partyRef.child(editKey).update(datos, () => {
-        alert("¡Tarjeta actualizada!");
-        limpiarForm();
-      });
-    } else {
-      partyRef.push(datos, () => {
-        lanzarConfeti();
-        alert("¡Tu mensaje fue publicado en el muro!");
-        limpiarForm();
-      });
-    }
+    // Procesar la foto seleccionada (si la hay)
+    procesarImagen(archivoFoto, function(fotoBase64) {
+      const fotoFinal = fotoBase64 || fotoExistente || '';
+
+      const datos = {
+        tipo: tipo,
+        nombre: nombre,
+        contenido: contenido,
+        foto: fotoFinal,
+        pin: pin,
+        fecha: new Date().toLocaleDateString()
+      };
+
+      if (editKey) {
+        partyRef.child(editKey).update(datos, () => {
+          alert("¡Tarjeta actualizada!");
+          limpiarForm();
+        });
+      } else {
+        partyRef.push(datos, () => {
+          lanzarConfeti();
+          alert("¡Tu mensaje y foto fueron publicados en el muro!");
+          limpiarForm();
+        });
+      }
+    });
   }
 
   function renderizarMuro(datos) {
@@ -570,7 +622,7 @@
       document.getElementById('tipo').value = item.tipo;
       document.getElementById('nombre').value = item.nombre;
       document.getElementById('contenido').value = item.contenido;
-      document.getElementById('foto').value = item.foto || '';
+      document.getElementById('fotoBase64Existente').value = item.foto || '';
       document.getElementById('pin').value = item.pin;
       document.getElementById('btnSubmit').innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Guardar Cambios';
     } else if (pinIngresado !== null) {
@@ -590,9 +642,10 @@
 
   function limpiarForm() {
     document.getElementById('editKey').value = '';
+    document.getElementById('fotoBase64Existente').value = '';
     document.getElementById('nombre').value = '';
     document.getElementById('contenido').value = '';
-    document.getElementById('foto').value = '';
+    document.getElementById('fotoInput').value = '';
     document.getElementById('pin').value = '';
     document.getElementById('btnSubmit').innerHTML = '<i class="fa-solid fa-paper-plane"></i> Publicar en el Muro';
   }
