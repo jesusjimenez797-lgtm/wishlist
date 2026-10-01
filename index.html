@@ -184,80 +184,66 @@
       color: #ff758c;
     }
 
-    /* === SECCIÓN PASTEL Y VELITAS REALISTAS CROMÁTICAS === */
+    /* === SECCIÓN PASTEL DE DISEÑO MEJORADO === */
     .cake-section {
-      background: rgba(255, 255, 255, 0.12);
-      backdrop-filter: blur(10px);
-      border-radius: 20px;
-      padding: 30px 20px 20px 20px;
+      background: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(12px);
+      border-radius: 24px;
+      padding: 35px 20px 25px 20px;
       text-align: center;
-      border: 2px solid rgba(255, 222, 0, 0.4);
-      box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+      border: 2px solid rgba(255, 222, 0, 0.3);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.4);
       overflow-x: auto;
     }
 
     .cake-title {
-      font-size: 20px;
+      font-size: 22px;
       color: #ffde00;
-      font-weight: bold;
-      margin-bottom: 25px;
+      font-weight: 700;
+      margin-bottom: 30px;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.5);
     }
 
-    .cake-container {
+    .cake-wrapper {
       position: relative;
       min-width: 320px;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: flex-end;
-      margin: 0 auto;
+      margin: 0 auto 10px auto;
     }
 
-    /* Fila de Velitas */
+    /* Fila de Velas y Letreros de Nombre */
     .candles-row {
       display: flex;
       justify-content: center;
       align-items: flex-end;
-      gap: 30px;
+      gap: 35px;
       flex-wrap: wrap;
-      z-index: 5;
-      margin-bottom: -3px;
-      padding: 0 15px;
+      z-index: 10;
+      margin-bottom: -6px;
+      padding: 0 20px;
     }
 
-    .candle-item {
+    .candle-unit {
       display: flex;
       flex-direction: column;
       align-items: center;
       position: relative;
     }
 
-    /* Nombre flotante elegante */
-    .candle-name-top {
-      background: linear-gradient(135deg, #ffffff 0%, #fff0f5 100%);
-      color: #7209b7;
-      font-size: 11px;
-      font-weight: 700;
-      padding: 3px 9px;
-      border-radius: 12px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.5);
-      margin-bottom: 8px;
-      white-space: nowrap;
-      border: 1.5px solid #ffde00;
-      text-transform: capitalize;
-    }
-
-    /* Cuerpo de la Velita con Textura Realista */
+    /* Vela Visual */
     .candle {
       position: relative;
-      width: 14px;
-      height: 48px;
+      width: 16px;
+      height: 52px;
       border-radius: 4px 4px 2px 2px;
-      box-shadow: inset -3px 0 5px rgba(0, 0, 0, 0.25), 0 3px 6px rgba(0,0,0,0.4);
-      overflow: visible;
+      box-shadow: inset -3px 0 5px rgba(0, 0, 0, 0.3), 0 4px 8px rgba(0,0,0,0.4);
+      z-index: 2;
     }
 
-    /* Mechita de la vela */
+    /* Mecha */
     .candle::before {
       content: '';
       position: absolute;
@@ -266,73 +252,128 @@
       transform: translateX(-50%);
       width: 2px;
       height: 6px;
-      background: #222;
-      border-radius: 1px;
+      background: #111;
     }
 
-    /* Llama Realista Resplandeciente multincapa */
+    /* Llama brillante */
     .flame {
       position: absolute;
-      top: -24px;
+      top: -26px;
       left: 50%;
       transform: translateX(-50%);
-      width: 14px;
-      height: 22px;
-      background: radial-gradient(ellipse at 50% 80%, #ffffff 0%, #ffbe0b 35%, #ff0054 80%, rgba(255, 0, 84, 0) 100%);
+      width: 16px;
+      height: 24px;
+      background: radial-gradient(ellipse at 50% 80%, #ffffff 0%, #ffbe0b 40%, #ff0054 85%, rgba(255, 0, 84, 0) 100%);
       border-radius: 50% 50% 35% 35% / 60% 60% 40% 40%;
-      box-shadow: 0 -2px 10px #ffbe0b, 0 -6px 20px #ff0054, 0 0 30px rgba(255, 190, 11, 0.8);
-      animation: flameGlow 0.8s infinite alternate ease-in-out;
+      box-shadow: 0 -2px 12px #ffbe0b, 0 -6px 22px #ff0054, 0 0 35px rgba(255, 190, 11, 0.9);
+      animation: flameFlicker 0.7s infinite alternate ease-in-out;
       transform-origin: center bottom;
+      z-index: 3;
     }
 
-    /* Núcleo interno azualado/blanco de la llama */
-    .flame::after {
+    @keyframes flameFlicker {
+      0% { transform: translateX(-50%) scale(0.92) rotate(-3deg); }
+      100% { transform: translateX(-50%) scale(1.08) rotate(3deg); }
+    }
+
+    /* Etiqueta del Nombre Debajo de la Vela - 100% Legible */
+    .candle-name-tag {
+      background: #ffffff;
+      color: #2b0054;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+      margin-top: 4px;
+      white-space: nowrap;
+      border: 2px solid #ffde00;
+      z-index: 5;
+      position: relative;
+    }
+
+    .candle-name-tag::before {
       content: '';
       position: absolute;
-      bottom: 2px;
+      top: -5px;
       left: 50%;
       transform: translateX(-50%);
-      width: 5px;
-      height: 8px;
-      background: #ffffff;
-      border-radius: 50%;
-      box-shadow: 0 0 5px #4cc9f0;
+      border-left: 5px solid transparent;
+      border-right: 5px solid transparent;
+      border-bottom: 5px solid #ffde00;
     }
 
-    @keyframes flameGlow {
-      0% { transform: translateX(-50%) scale(0.95) rotate(-2deg); opacity: 0.92; }
-      50% { transform: translateX(-50%) scale(1.05) rotate(2deg); opacity: 1; }
-      100% { transform: translateX(-50%) scale(1) rotate(-1deg); opacity: 0.96; }
+    /* Colores de Velas */
+    .candle-c0 { background: repeating-linear-gradient(45deg, #ff477e, #ff477e 7px, #ffffff 7px, #ffffff 14px); }
+    .candle-c1 { background: repeating-linear-gradient(-45deg, #00b4d8, #00b4d8 7px, #ffffff 7px, #ffffff 14px); }
+    .candle-c2 { background: repeating-linear-gradient(45deg, #ffb703, #ffb703 7px, #ffffff 7px, #ffffff 14px); }
+    .candle-c3 { background: repeating-linear-gradient(-45deg, #7209b7, #7209b7 7px, #ffffff 7px, #ffffff 14px); }
+    .candle-c4 { background: repeating-linear-gradient(45deg, #38b000, #38b000 7px, #ffffff 7px, #ffffff 14px); }
+
+    /* --- ESTRUCTURA DE LA TORTA REDISEÑADA --- */
+    .cake-body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
     }
 
-    /* Colores Variados para las Velitas */
-    .candle-color-0 { background: repeating-linear-gradient(45deg, #ff477e, #ff477e 6px, #ffffff 6px, #ffffff 12px); }
-    .candle-color-1 { background: repeating-linear-gradient(-45deg, #4cc9f0, #4cc9f0 6px, #ffffff 6px, #ffffff 12px); }
-    .candle-color-2 { background: repeating-linear-gradient(45deg, #ffbe0b, #ffbe0b 6px, #ffffff 6px, #ffffff 12px); }
-    .candle-color-3 { background: repeating-linear-gradient(-45deg, #7209b7, #7209b7 6px, #ffffff 6px, #ffffff 12px); }
-    .candle-color-4 { background: repeating-linear-gradient(45deg, #06d6a0, #06d6a0 6px, #ffffff 6px, #ffffff 12px); }
-    .candle-color-5 { background: repeating-linear-gradient(-45deg, #ff70a6, #ff70a6 6px, #ffde00 6px, #ffde00 12px); }
-
-    /* Pastel con textura e iluminación */
-    .cake-top {
+    /* Capa Superior de Torta */
+    .cake-layer-top {
       width: 290px;
-      height: 48px;
-      background: linear-gradient(135deg, #ffffff 0%, #ffe5ec 100%);
-      border-radius: 18px 18px 0 0;
-      margin-bottom: -2px;
+      height: 55px;
+      background: linear-gradient(180deg, #fff5f8 0%, #ffccd5 100%);
+      border-radius: 20px 20px 8px 8px;
       position: relative;
-      border: 2px solid rgba(255,255,255,0.6);
-      box-shadow: inset 0 -5px 10px rgba(0,0,0,0.05);
+      box-shadow: inset 0 -4px 8px rgba(0,0,0,0.1), 0 4px 10px rgba(0,0,0,0.2);
+      border: 2px solid #ffffff;
+      z-index: 2;
     }
 
-    .cake-base {
-      width: 340px;
-      height: 80px;
-      background: linear-gradient(135deg, #ff477e 0%, #f72585 100%);
-      border-radius: 16px 16px 14px 14px;
-      border-bottom: 10px solid #5c0099;
-      box-shadow: 0 12px 25px rgba(0,0,0,0.4);
+    /* Glaseado/Crema derramada en la parte superior */
+    .frosting-drips {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 22px;
+      background: #ffffff;
+      border-radius: 20px 20px 10px 10px;
+      box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+    }
+
+    /* Capa Inferior de Torta */
+    .cake-layer-bottom {
+      width: 350px;
+      height: 85px;
+      background: linear-gradient(180deg, #ff477e 0%, #c77dff 50%, #7209b7 100%);
+      border-radius: 16px 16px 12px 12px;
       position: relative;
+      margin-top: -6px;
+      box-shadow: inset 0 5px 10px rgba(255,255,255,0.3), 0 8px 20px rgba(0,0,0,0.4);
+      border: 2px solid rgba(255,255,255,0.3);
+      z-index: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    /* Decoración de Chispas */
+    .sprinkles-decor {
+      font-size: 18px;
+      letter-spacing: 15px;
+      opacity: 0.8;
+      user-select: none;
+    }
+
+    /* Plato de la Torta */
+    .cake-plate {
+      width: 390px;
+      height: 16px;
+      background: linear-gradient(180deg, #e0e0e0 0%, #ffffff 50%, #b0b0b0 100%);
+      border-radius: 50%;
+      margin-top: -6px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.6);
     }
 
     /* Layout Dynamic */
@@ -573,15 +614,26 @@
     </div>
   </div>
 
-  <!-- Pastel de Cumpleaños Interactivo -->
+  <!-- Pastel de Cumpleaños Interactivo Rediseñado -->
   <div class="cake-section">
     <div class="cake-title" id="cakeCounterText">🎂 Torta de Cumpleaños de Alexa (0 Velitas Encendidas)</div>
-    <div class="cake-container">
+    
+    <div class="cake-wrapper">
+      <!-- Fila de Velas con Etiquetas de Nombre -->
       <div class="candles-row" id="candlesRow">
-        <!-- Las velitas multicolores se generarán dinámicamente aquí -->
+        <!-- Generación dinámica de velas y nombres -->
       </div>
-      <div class="cake-top"></div>
-      <div class="cake-base"></div>
+
+      <!-- Torta Ilustrada -->
+      <div class="cake-body">
+        <div class="cake-layer-top">
+          <div class="frosting-drips"></div>
+        </div>
+        <div class="cake-layer-bottom">
+          <div class="sprinkles-decor">✨ 🍓 🌸 💖 🍬 ✨</div>
+        </div>
+        <div class="cake-plate"></div>
+      </div>
     </div>
   </div>
 
@@ -622,7 +674,7 @@
         <input type="password" id="pin" maxlength="4" placeholder="1234" required>
       </div>
 
-      <button class="btn-submit" id="btnSubmit" onclick="guardarTarjetas()"><i class="fa-solid fa-paper-plane"></i> Publicar y Encender Velita 🕯️</button>
+      <button class="btn-submit" id="btnSubmit" onclick="guardarTarjetas()"><i class="fa-solid fa-paper-plane"></i> Publicar y Encender Velita 🕯️️</button>
     </div>
 
     <!-- Muro y Álbum de Fotos -->
@@ -776,7 +828,7 @@
     });
   }
 
-  // Generar Velitas Realistas Multicolores
+  // Generador de Velas + Cartel de Nombre Nítido
   function actualizarPastel(datos) {
     const candlesRow = document.getElementById('candlesRow');
     const cakeCounterText = document.getElementById('cakeCounterText');
@@ -789,19 +841,19 @@
 
     keys.forEach((key, index) => {
       const item = datos[key];
-      const colorClass = `candle-color-${index % 6}`; // Alterna dinámicamente entre 6 combinaciones cromáticas
+      const colorClass = `candle-c${index % 5}`;
 
-      const candleItem = document.createElement('div');
-      candleItem.className = 'candle-item';
+      const candleUnit = document.createElement('div');
+      candleUnit.className = 'candle-unit';
 
-      candleItem.innerHTML = `
-        <div class="candle-name-top">${item.nombre}</div>
+      candleUnit.innerHTML = `
         <div class="candle ${colorClass}">
           <div class="flame"></div>
         </div>
+        <div class="candle-name-tag">${item.nombre}</div>
       `;
 
-      candlesRow.appendChild(candleItem);
+      candlesRow.appendChild(candleUnit);
     });
   }
 
