@@ -184,26 +184,6 @@
       color: #ff758c;
     }
 
-    /* Ruleta / Sorpresa de Regalos */
-    .roulette-box {
-      background: linear-gradient(135deg, #3a0ca3 0%, #4361ee 100%);
-      border-radius: 20px;
-      padding: 20px;
-      text-align: center;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.3);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .roulette-result {
-      font-size: 20px;
-      font-weight: bold;
-      color: #ffde00;
-      min-height: 30px;
-    }
-
     /* Layout Dynamic */
     .layout {
       display: grid;
@@ -341,6 +321,15 @@
       border: 1px dashed #ffb3c1;
     }
 
+    .card-photo {
+      width: 100%;
+      max-height: 250px;
+      object-fit: cover;
+      border-radius: 12px;
+      border: 2px solid #ffb3c1;
+      margin-top: 5px;
+    }
+
     .card-footer {
       display: flex;
       justify-content: space-between;
@@ -425,26 +414,19 @@
     </div>
   </div>
 
-  <!-- Ruleta Interactiva de Regalos -->
-  <div class="roulette-box">
-    <div style="font-size: 16px; font-weight: bold; color: #fff;">🎲 ¿Buscando qué regalarle? ¡Gira la Caja de Ideas!</div>
-    <div class="roulette-result" id="ideaResult">👇 Presiona el botón para descubrir ideas</div>
-    <button class="btn-party" style="font-size: 14px; padding: 8px 18px;" onclick="girarIdeas()">🎰 Obtener Idea de Regalo</button>
-  </div>
-
   <div class="layout">
-    <!-- Formulario tipo Tarjeta -->
+    <!-- Formulario tipo Tarjeta con opción de foto -->
     <div class="panel">
-      <h2><i class="fa-solid fa-pen-to-square"></i> Dejar una Tarjeta</h2>
+      <h2><i class="fa-solid fa-pen-to-square"></i> Dejar un Mensaje / Recuerdo</h2>
       
       <input type="hidden" id="editKey" value="">
 
       <div class="form-group">
-        <label for="tipo">Tipo de Publicación</label>
+        <label for="tipo">Categoría de la Nota</label>
         <select id="tipo">
-          <option value="💌 Mensaje Especial">💌 Mensaje / Felicitación</option>
-          <option value="🎁 Idea de Regalo">🎁 Sugerencia de Regalo / Gusto</option>
-          <option value="🍕 Lluvia de Sobres / Fiesta">🍕 Aporte para la Fiesta / Torta</option>
+          <option value="💌 Mensaje Especial">💌 Mensaje Especial de Cumpleaños</option>
+          <option value="📸 Foto / Recuerdo">📸 Foto / Recuerdo Bonito</option>
+          <option value="🍕 Aporte Fiesta">🍕 Aporte para la Celebración / Torta</option>
         </select>
       </div>
 
@@ -454,13 +436,13 @@
       </div>
 
       <div class="form-group">
-        <label for="contenido">Tu mensaje o detalle *</label>
-        <textarea id="contenido" rows="4" placeholder="¡Escribe tus deseos de cumple o detalles de regalo aquí!..." required></textarea>
+        <label for="contenido">Tu mensaje o deseo especial *</label>
+        <textarea id="contenido" rows="4" placeholder="¡Escribe tus deseos de cumple o recuerda una anécdota especial con Alexa!..." required></textarea>
       </div>
 
       <div class="form-group">
-        <label for="links">🔗 Link de referencia / tienda (Opcional)</label>
-        <input type="text" id="links" placeholder="Ej: instagram.com/tienda">
+        <label for="foto">🖼️ Link de una Foto / Recuerdo (Opcional)</label>
+        <input type="text" id="foto" placeholder="Pegar URL de la imagen (ej: https://....jpg)">
       </div>
 
       <div class="form-group">
@@ -468,12 +450,12 @@
         <input type="password" id="pin" maxlength="4" placeholder="1234" required>
       </div>
 
-      <button class="btn-submit" id="btnSubmit" onclick="guardarTarjetas()"><i class="fa-solid fa-paper-plane"></i> Enviar Tarjeta Digital</button>
+      <button class="btn-submit" id="btnSubmit" onclick="guardarTarjetas()"><i class="fa-solid fa-paper-plane"></i> Publicar en el Muro</button>
     </div>
 
-    <!-- Muro de Tarjetas -->
+    <!-- Muro y Álbum de Fotos -->
     <div class="panel">
-      <h2><i class="fa-solid fa-envelope-open-text"></i> Muro de Felicitaciones</h2>
+      <h2><i class="fa-solid fa-images"></i> Muro de Mensajes y Recuerdos</h2>
       
       <div class="cards-container" id="cardsContainer">
         <div class="empty-state">Cargando las sorpresas... 🎈</div>
@@ -511,7 +493,7 @@
     const tipo = document.getElementById('tipo').value;
     const nombre = document.getElementById('nombre').value.trim();
     const contenido = document.getElementById('contenido').value.trim();
-    const links = document.getElementById('links').value.trim();
+    const foto = document.getElementById('foto').value.trim();
     const pin = document.getElementById('pin').value.trim();
 
     if (!nombre || !contenido || !pin) {
@@ -523,7 +505,7 @@
       tipo: tipo,
       nombre: nombre,
       contenido: contenido,
-      links: links,
+      foto: foto,
       pin: pin,
       fecha: new Date().toLocaleDateString()
     };
@@ -536,7 +518,7 @@
     } else {
       partyRef.push(datos, () => {
         lanzarConfeti();
-        alert("¡Tu tarjeta fue publicada en la fiesta!");
+        alert("¡Tu mensaje fue publicado en el muro!");
         limpiarForm();
       });
     }
@@ -549,7 +531,7 @@
     const keys = Object.keys(datos).reverse();
 
     if (keys.length === 0) {
-      container.innerHTML = '<div class="empty-state">¡Aún no hay tarjetas! Sé el primero en dejarle una felicitación a Alexa 🎈</div>';
+      container.innerHTML = '<div class="empty-state">¡Aún no hay mensajes! Sé el primero en dejarle una felicitación a Alexa 🎈</div>';
       return;
     }
 
@@ -558,7 +540,7 @@
       const card = document.createElement('div');
       card.className = 'festive-card';
 
-      let linkHTML = item.links ? `<a href="${item.links.startsWith('http') ? item.links : 'https://' + item.links}" target="_blank" style="color: #7209b7; font-weight: bold; font-size: 13px;">🔗 Ver enlace sugerido</a>` : '';
+      let fotoHTML = item.foto ? `<img class="card-photo" src="${item.foto}" alt="Foto Recuerdo" onerror="this.style.display='none'">` : '';
 
       card.innerHTML = `
         <div class="card-header">
@@ -566,7 +548,7 @@
           <span class="badge-tag">${item.tipo}</span>
         </div>
         <div class="card-body">${item.contenido}</div>
-        ${linkHTML}
+        ${fotoHTML}
         <div class="card-footer">
           <span>📅 ${item.fecha}</span>
           <div>
@@ -588,7 +570,7 @@
       document.getElementById('tipo').value = item.tipo;
       document.getElementById('nombre').value = item.nombre;
       document.getElementById('contenido').value = item.contenido;
-      document.getElementById('links').value = item.links || '';
+      document.getElementById('foto').value = item.foto || '';
       document.getElementById('pin').value = item.pin;
       document.getElementById('btnSubmit').innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Guardar Cambios';
     } else if (pinIngresado !== null) {
@@ -610,9 +592,9 @@
     document.getElementById('editKey').value = '';
     document.getElementById('nombre').value = '';
     document.getElementById('contenido').value = '';
-    document.getElementById('links').value = '';
+    document.getElementById('foto').value = '';
     document.getElementById('pin').value = '';
-    document.getElementById('btnSubmit').innerHTML = '<i class="fa-solid fa-paper-plane"></i> Enviar Tarjeta Digital';
+    document.getElementById('btnSubmit').innerHTML = '<i class="fa-solid fa-paper-plane"></i> Publicar en el Muro';
   }
 
   function lanzarConfeti() {
@@ -631,33 +613,6 @@
       document.getElementById('musicText').innerText = "Pausar Diomedes 🎵";
     }
     reproduciendoAudio = !reproduciendoAudio;
-  }
-
-  // Ruleta de ideas
-  const ideas = [
-    "🧴 Perfume dulce / Loción corporal",
-    "💄 Kit de Skincare / Cuidado facial",
-    "👗 Bono de regalo para tienda de ropa",
-    "🎧 Audífonos inalámbricos",
-    "☕ Taza térmica bonita para oficina",
-    "🍫 Chocolates de regalo especiales",
-    "⌚ Accesorio / Pulsera fina",
-    "🍕 Lluvia de sobres / Aporte para la fiesta"
-  ];
-
-  function girarIdeas() {
-    let index = 0;
-    const interval = setInterval(() => {
-      document.getElementById('ideaResult').innerText = ideas[index];
-      index = (index + 1) % ideas.length;
-    }, 80);
-
-    setTimeout(() => {
-      clearInterval(interval);
-      const finalIdea = ideas[Math.floor(Math.random() * ideas.length)];
-      document.getElementById('ideaResult').innerText = "💡 Idea sugerida: " + finalIdea;
-      lanzarConfeti();
-    }, 1500);
   }
 
   // Contador
