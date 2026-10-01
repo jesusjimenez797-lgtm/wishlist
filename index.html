@@ -114,6 +114,7 @@
       display: flex;
       align-items: center;
       gap: 8px;
+      text-decoration: none;
     }
 
     .btn-party:hover {
@@ -121,7 +122,7 @@
       background: #ffffff;
     }
 
-    /* Contenedor del reproductor de YouTube */
+    /* Contenedor del reproductor de YouTube seguro */
     .youtube-container {
       margin-top: 20px;
       border-radius: 16px;
@@ -130,6 +131,7 @@
       max-width: 100%;
       box-shadow: 0 8px 25px rgba(0,0,0,0.4);
       border: 3px solid #ffde00;
+      background: #000;
     }
 
     /* Contador Regresivo */
@@ -372,24 +374,27 @@
 
 <div class="container">
 
-  <!-- Header Festivo con YouTube Embebido -->
+  <!-- Header Festivo con YouTube Integrado Seguro -->
   <header>
     <h1>🎉 FIESTA DIGITAL DE ALEXA 🎂</h1>
     <p>¡Celebremos el Cumpleaños de Alexa Gualdrón el 26 de Noviembre!</p>
     
     <div class="header-actions">
       <button class="btn-party" onclick="lanzarConfeti()"><i class="fa-solid fa-gift"></i> ¡Lanzar Confeti!</button>
+      <a class="btn-party" style="background: #ff0000; color: #ffffff;" href="https://www.youtube.com/watch?v=P34S5qU9p5s" target="_blank">
+        <i class="fa-brands fa-youtube"></i> Abrir en YouTube
+      </a>
     </div>
 
-    <!-- Reproductor de YouTube de Diomedes Díaz integrador -->
+    <!-- Reproductor de YouTube sin cookies bloqueantes -->
     <div class="youtube-container">
       <iframe 
         width="320" 
         height="180" 
-        src="https://www.youtube.com/watch?v=YJ84U_30GRM&list=RDYJ84U_30GRM&start_radio=1" 
+        src="https://www.youtube-nocookie.com/embed/P34S5qU9p5s?rel=0&autoplay=0" 
         title="Tu Cumpleaños - Diomedes Díaz" 
         frameborder="0" 
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
         allowfullscreen>
       </iframe>
     </div>
