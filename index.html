@@ -184,6 +184,106 @@
       color: #ff758c;
     }
 
+    /* Sección del Pastel Interactivo */
+    .cake-section {
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      padding: 25px 20px 15px 20px;
+      text-align: center;
+      border: 2px solid rgba(255, 222, 0, 0.4);
+      box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+    }
+
+    .cake-title {
+      font-size: 18px;
+      color: #ffde00;
+      font-weight: bold;
+      margin-bottom: 15px;
+    }
+
+    .cake-container {
+      position: relative;
+      width: 280px;
+      height: 180px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-end;
+    }
+
+    .candles-row {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      max-width: 260px;
+      z-index: 5;
+      margin-bottom: -5px;
+    }
+
+    .candle {
+      position: relative;
+      width: 12px;
+      height: 35px;
+      background: linear-gradient(to bottom, #ff758c, #ff477e);
+      border-radius: 4px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+      cursor: pointer;
+    }
+
+    .flame {
+      position: absolute;
+      top: -12px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 10px;
+      height: 14px;
+      background: #ffde00;
+      border-radius: 50% 50% 20% 20%;
+      box-shadow: 0 0 10px #ffde00, 0 0 20px #ff758c;
+      animation: flicker 0.6s infinite alternate;
+    }
+
+    @keyframes flicker {
+      0% { transform: translateX(-50%) scale(1) rotate(-2deg); opacity: 0.9; }
+      100% { transform: translateX(-50%) scale(1.15) rotate(2deg); opacity: 1; }
+    }
+
+    .candle-name {
+      position: absolute;
+      bottom: -22px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #7209b7;
+      color: #fff;
+      font-size: 10px;
+      padding: 2px 6px;
+      border-radius: 8px;
+      white-space: nowrap;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+    }
+
+    .cake-base {
+      width: 220px;
+      height: 70px;
+      background: linear-gradient(135deg, #ff758c, #f72585);
+      border-radius: 15px 15px 10px 10px;
+      border-bottom: 8px solid #7209b7;
+      box-shadow: 0 8px 15px rgba(0,0,0,0.3);
+      position: relative;
+    }
+
+    .cake-top {
+      width: 180px;
+      height: 45px;
+      background: linear-gradient(135deg, #ffffff, #ffccd5);
+      border-radius: 15px 15px 0 0;
+      margin-bottom: -2px;
+      position: relative;
+    }
+
     /* Layout Dynamic */
     .layout {
       display: grid;
@@ -422,10 +522,22 @@
     </div>
   </div>
 
+  <!-- Pastel de Cumpleaños Interactivo -->
+  <div class="cake-section">
+    <div class="cake-title" id="cakeCounterText">🎂 Torta de Cumpleaños de Alexa (0 Velitas Encendidas)</div>
+    <div class="cake-container">
+      <div class="candles-row" id="candlesRow">
+        <!-- Las velitas se generan dinámicamente aquí -->
+      </div>
+      <div class="cake-top"></div>
+      <div class="cake-base"></div>
+    </div>
+  </div>
+
   <div class="layout">
     <!-- Formulario tipo Tarjeta con subida directa de archivos -->
     <div class="panel">
-      <h2><i class="fa-solid fa-pen-to-square"></i> Dejar un Mensaje / Recuerdo</h2>
+      <h2><i class="fa-solid fa-pen-to-square"></i> Encender una Velita & Dejar Mensaje</h2>
       
       <input type="hidden" id="editKey" value="">
       <input type="hidden" id="fotoBase64Existente" value="">
@@ -459,7 +571,7 @@
         <input type="password" id="pin" maxlength="4" placeholder="1234" required>
       </div>
 
-      <button class="btn-submit" id="btnSubmit" onclick="guardarTarjetas()"><i class="fa-solid fa-paper-plane"></i> Publicar en el Muro</button>
+      <button class="btn-submit" id="btnSubmit" onclick="guardarTarjetas()"><i class="fa-solid fa-paper-plane"></i> Publicar y Encender Velita 🕯️</button>
     </div>
 
     <!-- Muro y Álbum de Fotos -->
@@ -495,9 +607,10 @@
   partyRef.on('value', (snapshot) => {
     publicaciones = snapshot.val() || {};
     renderizarMuro(publicaciones);
+    actualizarPastel(publicaciones);
   });
 
-  // Función para comprimir/convertir imagen local a formato de texto comprimido
+  // Procesar imagen local
   function procesarImagen(file, callback) {
     if (!file) {
       callback(null);
@@ -523,7 +636,6 @@
         const ctx = canvas.getContext('2d');
         ctx.drawImage(img, 0, 0, width, height);
         
-        // Exportar como JPEG comprimido para optimizar velocidad y espacio
         const dataUrl = canvas.toDataURL('image/jpeg', 0.7);
         callback(dataUrl);
       };
@@ -548,7 +660,6 @@
 
     const archivoFoto = fileInput.files[0];
 
-    // Procesar la foto seleccionada (si la hay)
     procesarImagen(archivoFoto, function(fotoBase64) {
       const fotoFinal = fotoBase64 || fotoExistente || '';
 
@@ -569,7 +680,7 @@
       } else {
         partyRef.push(datos, () => {
           lanzarConfeti();
-          alert("¡Tu mensaje y foto fueron publicados en el muro!");
+          alert("¡Tu velita fue encendida en la torta y tu mensaje publicado!");
           limpiarForm();
         });
       }
@@ -583,7 +694,7 @@
     const keys = Object.keys(datos).reverse();
 
     if (keys.length === 0) {
-      container.innerHTML = '<div class="empty-state">¡Aún no hay mensajes! Sé el primero en dejarle una felicitación a Alexa 🎈</div>';
+      container.innerHTML = '<div class="empty-state">¡Aún no hay mensajes! Sé el primero en encender una velita para Alexa 🕯️</div>';
       return;
     }
 
@@ -611,6 +722,32 @@
       `;
 
       container.appendChild(card);
+    });
+  }
+
+  // Generación de Velitas en la Torta
+  function actualizarPastel(datos) {
+    const candlesRow = document.getElementById('candlesRow');
+    const cakeCounterText = document.getElementById('cakeCounterText');
+    candlesRow.innerHTML = '';
+
+    const keys = Object.keys(datos);
+    const totalVelitas = keys.length;
+
+    cakeCounterText.innerText = `🎂 Torta de Cumpleaños de Alexa (${totalVelitas} ${totalVelitas === 1 ? 'Velita Encendida' : 'Velitas Encendidas'})`;
+
+    keys.forEach(key => {
+      const item = datos[key];
+      const candle = document.createElement('div');
+      candle.className = 'candle';
+      candle.title = `Velita de ${item.nombre}`;
+
+      candle.innerHTML = `
+        <div class="flame"></div>
+        <div class="candle-name">${item.nombre}</div>
+      `;
+
+      candlesRow.appendChild(candle);
     });
   }
 
@@ -647,7 +784,7 @@
     document.getElementById('contenido').value = '';
     document.getElementById('fotoInput').value = '';
     document.getElementById('pin').value = '';
-    document.getElementById('btnSubmit').innerHTML = '<i class="fa-solid fa-paper-plane"></i> Publicar en el Muro';
+    document.getElementById('btnSubmit').innerHTML = '<i class="fa-solid fa-paper-plane"></i> Publicar y Encender Velita 🕯️';
   }
 
   function lanzarConfeti() {
