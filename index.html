@@ -72,7 +72,7 @@
       text-align: center;
       background: linear-gradient(135deg, #f72585 0%, #7209b7 100%);
       color: white;
-      padding: 40px 20px;
+      padding: 35px 20px;
       border-radius: 25px;
       box-shadow: 0 10px 30px rgba(247, 37, 133, 0.4);
       position: relative;
@@ -80,7 +80,7 @@
     }
 
     header h1 {
-      font-size: 38px;
+      font-size: 36px;
       margin-bottom: 5px;
       text-shadow: 3px 3px 0px #3c096c;
       letter-spacing: 1px;
@@ -96,7 +96,7 @@
       display: flex;
       justify-content: center;
       gap: 12px;
-      margin-top: 20px;
+      margin-top: 15px;
       flex-wrap: wrap;
     }
 
@@ -119,6 +119,17 @@
     .btn-party:hover {
       transform: scale(1.08) rotate(-2deg);
       background: #ffffff;
+    }
+
+    /* Contenedor del reproductor de YouTube */
+    .youtube-container {
+      margin-top: 20px;
+      border-radius: 16px;
+      overflow: hidden;
+      display: inline-block;
+      max-width: 100%;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.4);
+      border: 3px solid #ffde00;
     }
 
     /* Contador Regresivo */
@@ -361,14 +372,26 @@
 
 <div class="container">
 
-  <!-- Header Festivo -->
+  <!-- Header Festivo con YouTube Embebido -->
   <header>
     <h1>🎉 FIESTA DIGITAL DE ALEXA 🎂</h1>
     <p>¡Celebremos el Cumpleaños de Alexa Gualdrón el 26 de Noviembre!</p>
     
     <div class="header-actions">
       <button class="btn-party" onclick="lanzarConfeti()"><i class="fa-solid fa-gift"></i> ¡Lanzar Confeti!</button>
-      <button class="btn-party" style="background: #4cc9f0; color: #000;" onclick="toggleMusica()"><i class="fa-solid fa-music"></i> <span id="musicText">Música de Fiesta</span></button>
+    </div>
+
+    <!-- Reproductor de YouTube de Diomedes Díaz integrador -->
+    <div class="youtube-container">
+      <iframe 
+        width="320" 
+        height="180" 
+        src="https://www.youtube.com/embed/P34S5qU9p5s?rel=0" 
+        title="Tu Cumpleaños - Diomedes Díaz" 
+        frameborder="0" 
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+        allowfullscreen>
+      </iframe>
     </div>
   </header>
 
@@ -452,9 +475,6 @@
   </div>
 </div>
 
-<!-- Audio de fondo festivo opcional -->
-<!-- Audio de fondo: Dios te bendiga - Diomedes Díaz -->
-<audio id="bgMusic" loop src="https://www.youtube.com/watch?v=YJ84U_30GRM&list=RDYJ84U_30GRM&start_radio=1"></audio>
 <script>
   // Firebase Config
   const firebaseConfig = {
@@ -617,20 +637,6 @@
       document.getElementById('ideaResult').innerText = "💡 Idea sugerida: " + finalIdea;
       lanzarConfeti();
     }, 1500);
-  }
-
-  // Música
-  let reproduciendo = false;
-  function toggleMusica() {
-    const audio = document.getElementById('bgMusic');
-    if (reproduciendo) {
-      audio.pause();
-      document.getElementById('musicText').innerText = "Música de Fiesta";
-    } else {
-      audio.play();
-      document.getElementById('musicText').innerText = "Pausar Música 🎵";
-    }
-    reproduciendo = !reproduciendo;
   }
 
   // Contador
