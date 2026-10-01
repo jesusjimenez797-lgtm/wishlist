@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>¡Happy Birthday Alexa Gualdrón! 🎂🎉</title>
+  
   <!-- Firebase SDKs -->
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
@@ -13,12 +14,13 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Poppins:wght@400;600&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Poppins:wght@400;600;700;800&display=swap');
 
     :root {
       --pink: #ff477e;
       --purple: #7209b7;
       --yellow: #f72585;
+      --gold: #ffb703;
       --bg: #1a0826;
       --card-bg: #ffffff;
       --text: #2b2d42;
@@ -67,7 +69,7 @@
       z-index: 10;
     }
 
-    /* Party Banner Header */
+    /* Header Festivo */
     header {
       text-align: center;
       background: linear-gradient(135deg, #f72585 0%, #7209b7 100%);
@@ -276,7 +278,7 @@
       100% { transform: translateX(-50%) scale(1.08) rotate(3deg); }
     }
 
-    /* Etiqueta del Nombre Debajo de la Vela - 100% Legible */
+    /* Etiqueta del Nombre Debajo de la Vela */
     .candle-name-tag {
       background: #ffffff;
       color: #2b0054;
@@ -310,7 +312,7 @@
     .candle-c3 { background: repeating-linear-gradient(-45deg, #7209b7, #7209b7 7px, #ffffff 7px, #ffffff 14px); }
     .candle-c4 { background: repeating-linear-gradient(45deg, #38b000, #38b000 7px, #ffffff 7px, #ffffff 14px); }
 
-    /* --- ESTRUCTURA DE LA TORTA REDISEÑADA --- */
+    /* Estructura de Torta */
     .cake-body {
       display: flex;
       flex-direction: column;
@@ -318,7 +320,6 @@
       position: relative;
     }
 
-    /* Capa Superior de Torta */
     .cake-layer-top {
       width: 290px;
       height: 55px;
@@ -330,7 +331,6 @@
       z-index: 2;
     }
 
-    /* Glaseado/Crema derramada en la parte superior */
     .frosting-drips {
       position: absolute;
       top: 0;
@@ -342,7 +342,6 @@
       box-shadow: 0 3px 6px rgba(0,0,0,0.1);
     }
 
-    /* Capa Inferior de Torta */
     .cake-layer-bottom {
       width: 350px;
       height: 85px;
@@ -358,7 +357,6 @@
       align-items: center;
     }
 
-    /* Decoración de Chispas */
     .sprinkles-decor {
       font-size: 18px;
       letter-spacing: 15px;
@@ -366,7 +364,6 @@
       user-select: none;
     }
 
-    /* Plato de la Torta */
     .cake-plate {
       width: 390px;
       height: 16px;
@@ -557,6 +554,165 @@
       padding: 30px 0;
       font-size: 15px;
     }
+
+    /* === MODAL PARRANDERO DIOMEDES ("Ayy, sirvalo compaeee!") === */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(16, 0, 43, 0.85);
+      backdrop-filter: blur(8px);
+      z-index: 9999;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+
+    .modal-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .liquor-modal {
+      background: linear-gradient(135deg, #240046 0%, #3c096c 100%);
+      border: 3px solid #ffde00;
+      border-radius: 28px;
+      padding: 30px 20px;
+      width: 100%;
+      max-width: 650px;
+      max-height: 90vh;
+      overflow-y: auto;
+      text-align: center;
+      box-shadow: 0 15px 40px rgba(255, 222, 0, 0.3), 0 0 50px rgba(247, 37, 133, 0.4);
+      position: relative;
+      transform: scale(0.8) translateY(30px);
+      transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .modal-overlay.active .liquor-modal {
+      transform: scale(1) translateY(0);
+    }
+
+    .modal-header-title {
+      font-size: 32px;
+      color: #ffde00;
+      font-weight: 800;
+      text-shadow: 2px 2px 0px #f72585;
+      margin-bottom: 8px;
+      animation: pulseGlow 1.5s infinite alternate;
+    }
+
+    @keyframes pulseGlow {
+      0% { text-shadow: 2px 2px 0px #f72585, 0 0 10px #ffde00; }
+      100% { text-shadow: 2px 2px 0px #f72585, 0 0 25px #ffde00, 0 0 40px #f72585; }
+    }
+
+    .modal-subtitle {
+      font-size: 16px;
+      color: #ffffff;
+      margin-bottom: 25px;
+    }
+
+    /* Grid de Botellas de Licor */
+    .liquor-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+      gap: 15px;
+      margin-bottom: 25px;
+    }
+
+    .liquor-card {
+      background: rgba(255, 255, 255, 0.08);
+      border: 2px solid rgba(255, 222, 0, 0.4);
+      border-radius: 18px;
+      padding: 12px 8px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .liquor-card:hover {
+      background: rgba(255, 222, 0, 0.25);
+      border-color: #ffde00;
+      transform: translateY(-8px) scale(1.05);
+      box-shadow: 0 8px 20px rgba(255, 222, 0, 0.5);
+    }
+
+    .liquor-icon {
+      font-size: 42px;
+      filter: drop-shadow(0 4px 6px rgba(0,0,0,0.4));
+      animation: bounceLiquor 3s infinite ease-in-out;
+    }
+
+    .liquor-card:nth-child(even) .liquor-icon {
+      animation-delay: 0.5s;
+    }
+
+    @keyframes bounceLiquor {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      50% { transform: translateY(-5px) rotate(4deg); }
+    }
+
+    .liquor-name {
+      font-size: 13px;
+      font-weight: 700;
+      color: #ffffff;
+      line-height: 1.2;
+    }
+
+    .btn-close-modal {
+      background: linear-gradient(135deg, #f72585 0%, #ff477e 100%);
+      color: white;
+      border: none;
+      padding: 12px 30px;
+      border-radius: 25px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: 0 5px 15px rgba(247, 37, 133, 0.4);
+      transition: transform 0.2s;
+    }
+
+    .btn-close-modal:hover {
+      transform: scale(1.05);
+    }
+
+    /* Toast Flotante de Salud */
+    .toast-salud {
+      position: fixed;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: #ffde00;
+      color: #1a0826;
+      font-size: 18px;
+      font-weight: 800;
+      padding: 14px 28px;
+      border-radius: 30px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5), 0 0 20px #ffde00;
+      z-index: 10000;
+      opacity: 0;
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      pointer-events: none;
+      border: 3px solid #ffffff;
+      text-align: center;
+    }
+
+    .toast-salud.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
   </style>
 </head>
 <body>
@@ -619,7 +775,7 @@
     <div class="cake-title" id="cakeCounterText">🎂 Torta de Cumpleaños de Alexa (0 Velitas Encendidas)</div>
     
     <div class="cake-wrapper">
-      <!-- Fila de Velas con Etiquetas de Nombre -->
+      <!-- Fila de Velas con Etiquetas de Nombre Legibles -->
       <div class="candles-row" id="candlesRow">
         <!-- Generación dinámica de velas y nombres -->
       </div>
@@ -674,7 +830,7 @@
         <input type="password" id="pin" maxlength="4" placeholder="1234" required>
       </div>
 
-      <button class="btn-submit" id="btnSubmit" onclick="guardarTarjetas()"><i class="fa-solid fa-paper-plane"></i> Publicar y Encender Velita 🕯️️</button>
+      <button class="btn-submit" id="btnSubmit" onclick="guardarTarjetas()"><i class="fa-solid fa-paper-plane"></i> Publicar y Encender Velita 🕯</button>
     </div>
 
     <!-- Muro y Álbum de Fotos -->
@@ -687,6 +843,58 @@
     </div>
   </div>
 </div>
+
+<!-- MODAL POPUP DIOMEDES: "Ayy, sirvalo compaeee!" -->
+<div class="modal-overlay" id="diomedesModal">
+  <div class="liquor-modal">
+    <div class="modal-header-title">¡Ayy, sírvalo compaeee! 🍾🥃</div>
+    <div class="modal-subtitle">¡Se prendió la parranda vallenata! Haz clic en tu trago preferido para brindar con Alexa:</div>
+    
+    <div class="liquor-grid">
+      <div class="liquor-card" onclick="brindarConTrago('Buchanan\'s 12 Años', '🥃')">
+        <div class="liquor-icon">🍾</div>
+        <div class="liquor-name">Buchanan's</div>
+      </div>
+      <div class="liquor-card" onclick="brindarConTrago('Tequila Reposado', '🌵')">
+        <div class="liquor-icon">🍸</div>
+        <div class="liquor-name">Tequila</div>
+      </div>
+      <div class="liquor-card" onclick="brindarConTrago('Ron Añejo', '🍯')">
+        <div class="liquor-icon">🍹</div>
+        <div class="liquor-name">Ron Añejo</div>
+      </div>
+      <div class="liquor-card" onclick="brindarConTrago('Chirrinchi Artesanal', '⚡')">
+        <div class="liquor-icon">🍶</div>
+        <div class="liquor-name">Chirrinchi</div>
+      </div>
+      <div class="liquor-card" onclick="brindarConTrago('Ron Viejo de Caldas', '🦁')">
+        <div class="liquor-icon">🥃</div>
+        <div class="liquor-name">Ron Caldas</div>
+      </div>
+      <div class="liquor-card" onclick="brindarConTrago('Ñeque Vallenato', '🔥')">
+        <div class="liquor-icon">🧪</div>
+        <div class="liquor-name">Ñeque</div>
+      </div>
+      <div class="liquor-card" onclick="brindarConTrago('Ron Medellín 8 Años', '👑')">
+        <div class="liquor-icon">🍾</div>
+        <div class="liquor-name">Ron Medellín</div>
+      </div>
+      <div class="liquor-card" onclick="brindarConTrago('Bacardí Carta Blanca', '🦇')">
+        <div class="liquor-icon">🍹</div>
+        <div class="liquor-name">Bacardí</div>
+      </div>
+      <div class="liquor-card" onclick="brindarConTrago('Ron Santa Fe', '🇨🇴')">
+        <div class="liquor-icon">🥃</div>
+        <div class="liquor-name">Ron Santa Fe</div>
+      </div>
+    </div>
+
+    <button class="btn-close-modal" onclick="cerrarModalDiomedes()"><i class="fa-solid fa-compact-disc"></i> ¡Seguir de Parranda!</button>
+  </div>
+</div>
+
+<!-- Toast flotante al brindar -->
+<div class="toast-salud" id="toastSalud"></div>
 
 <script>
   // Firebase Config
@@ -897,21 +1105,46 @@
     confetti({ particleCount: 120, spread: 80, origin: { y: 0.6 } });
   }
 
-  // Reproducción de Diomedes Díaz MP3
+  // Reproducción de Diomedes Díaz MP3 & Modal "Ayy, sirvalo compaeee"
   let reproduciendoAudio = false;
+  
   function toggleDiomedes() {
     const audio = document.getElementById('audioDiomedes');
     if (reproduciendoAudio) {
       audio.pause();
       document.getElementById('musicText').innerText = "Escuchar Diomedes Díaz 🪗";
+      reproduciendoAudio = false;
     } else {
-      audio.play().catch(() => alert("Por favor asegúrate de haber subido el archivo cumple.mp3 a GitHub."));
+      audio.play().catch(() => console.log("Audio pendiente de interacción."));
       document.getElementById('musicText').innerText = "Pausar Diomedes 🎵";
+      reproduciendoAudio = true;
+      abrirModalDiomedes();
     }
-    reproduciendoAudio = !reproduciendoAudio;
   }
 
-  // Contador
+  function abrirModalDiomedes() {
+    document.getElementById('diomedesModal').classList.add('active');
+    lanzarConfeti();
+  }
+
+  function cerrarModalDiomedes() {
+    document.getElementById('diomedesModal').classList.remove('active');
+  }
+
+  function brindarConTrago(nombreTrago, icono) {
+    lanzarConfeti();
+    
+    // Reproducir efecto visual con Toast
+    const toast = document.getElementById('toastSalud');
+    toast.innerHTML = `¡Salud, compae! 🥂<br><small>Sírvalo de ${nombreTrago} ${icono}</small>`;
+    toast.classList.add('show');
+
+    setTimeout(() => {
+      toast.classList.remove('show');
+    }, 3000);
+  }
+
+  // Contador Regresivo
   function actualizarContador() {
     const ahora = new Date();
     let anoActual = ahora.getFullYear();
@@ -924,7 +1157,7 @@
     const diff = fechaCumple - ahora;
     document.getElementById('days').innerText = String(Math.floor(diff / (1000 * 60 * 60 * 24))).padStart(2, '0');
     document.getElementById('hours').innerText = String(Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))).padStart(2, '0');
-    document.getElementById('minutes').innerText = String(Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60))).padStart(2, '0');
+    document.getElementById('minutes').innerText = String(Math.floor((diff % (1000 * 60)) / (1000 * 60))).padStart(2, '0');
     document.getElementById('seconds').innerText = String(Math.floor((diff % (1000 * 60)) / 1000)).padStart(2, '0');
   }
 
